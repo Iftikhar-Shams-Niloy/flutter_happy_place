@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_happy_place/widgets/places_list.dart';
 
 class PlacesScreen extends StatelessWidget {
   const PlacesScreen({super.key});
@@ -16,7 +17,9 @@ class PlacesScreen extends StatelessWidget {
         ],
       ),
 
-      body: Text("data"),
+      body: PlacesList(
+        placesList: [],
+      ),
     );
   }
 }
