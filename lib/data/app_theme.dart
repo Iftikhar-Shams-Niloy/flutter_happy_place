@@ -299,7 +299,9 @@ class MyAppTheme {
         //!   <----- Inputs ----->
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
-          fillColor: MyAppScheme.darkScheme.surfaceVariant.withOpacity(0.2),
+          fillColor: MyAppScheme.darkScheme.surfaceContainerHighest.withValues(
+            alpha: 0.2,
+          ),
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 12,
             vertical: 10,
@@ -327,8 +329,8 @@ class MyAppTheme {
         bottomNavigationBarTheme: BottomNavigationBarThemeData(
           backgroundColor: MyAppScheme.darkScheme.surface,
           selectedItemColor: MyAppScheme.darkScheme.primary,
-          unselectedItemColor: MyAppScheme.darkScheme.onSurface.withOpacity(
-            0.6,
+          unselectedItemColor: MyAppScheme.darkScheme.onSurface.withValues(
+            alpha: 0.6,
           ),
           showUnselectedLabels: true,
           elevation: 8,
@@ -349,8 +351,8 @@ class MyAppTheme {
 
         //!   <----- Chips ----->
         chipTheme: ChipThemeData(
-          backgroundColor: MyAppScheme.darkScheme.surfaceVariant,
-          selectedColor: MyAppScheme.darkScheme.primary.withOpacity(0.12),
+          backgroundColor: MyAppScheme.darkScheme.surfaceContainerHighest,
+          selectedColor: MyAppScheme.darkScheme.primary.withValues(alpha: 0.12),
           labelStyle: MyAppTextTheme.dark.bodySmall!,
           secondaryLabelStyle: MyAppTextTheme.dark.bodySmall!,
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -369,22 +371,24 @@ class MyAppTheme {
         //!   <----- Sliders ----->
         sliderTheme: SliderThemeData(
           activeTrackColor: MyAppScheme.darkScheme.primary,
-          inactiveTrackColor: MyAppScheme.darkScheme.onSurface.withOpacity(0.2),
+          inactiveTrackColor: MyAppScheme.darkScheme.onSurface.withValues(
+            alpha: 0.2,
+          ),
           thumbColor: MyAppScheme.darkScheme.primary,
         ),
 
         //!   <----- Switches ----->
         switchTheme: SwitchThemeData(
-          thumbColor: MaterialStateProperty.all(MyAppScheme.darkScheme.primary),
-          trackColor: MaterialStateProperty.all(
-            MyAppScheme.darkScheme.primary.withOpacity(0.5),
+          thumbColor: WidgetStateProperty.all(MyAppScheme.darkScheme.primary),
+          trackColor: WidgetStateProperty.all(
+            MyAppScheme.darkScheme.primary.withValues(alpha: 0.5),
           ),
         ),
 
         //!   <----- Tooltips ----->
         tooltipTheme: TooltipThemeData(
           decoration: BoxDecoration(
-            color: MyAppScheme.darkScheme.onSurface.withOpacity(0.9),
+            color: MyAppScheme.darkScheme.onSurface.withValues(alpha: 0.9),
             borderRadius: BorderRadius.circular(4),
           ),
           textStyle: MyAppTextTheme.dark.bodySmall,
@@ -397,7 +401,7 @@ class MyAppTheme {
 
         //!   <----- Scrollbar ----->
         scrollbarTheme: ScrollbarThemeData(
-          thumbColor: MaterialStateProperty.all(MyAppScheme.darkScheme.outline),
+          thumbColor: WidgetStateProperty.all(MyAppScheme.darkScheme.outline),
         ),
 
         //!   <----- Popup menus ----->
