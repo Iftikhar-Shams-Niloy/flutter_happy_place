@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_happy_place/screens/add_place_screen.dart';
 import 'package:flutter_happy_place/widgets/places_list.dart';
 
 class PlacesScreen extends StatelessWidget {
@@ -12,13 +13,21 @@ class PlacesScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.add_location_alt_outlined),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (ctx) => const AddPlaceScreen(),
+                ),
+              );
+            },
           ),
         ],
       ),
 
-      body: PlacesList(
-        placesList: [],
+      body: SafeArea(
+        child: PlacesList(
+          placesList: [],
+        ),
       ),
     );
   }

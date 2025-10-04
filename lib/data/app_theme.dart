@@ -2,20 +2,21 @@ import 'package:flutter/material.dart';
 
 class MyAppColors {
   static const seedGreen = Color.fromARGB(255, 238, 172, 95);
-  static const accentYellow = Color.fromARGB(255, 154, 109, 216);
+  static const accentPurple = Color.fromARGB(255, 154, 109, 216);
+  static const lightPurple = Color.fromARGB(255, 212, 181, 255);
 }
 
 class MyAppScheme {
   static final lightScheme = ColorScheme.fromSeed(
     seedColor: MyAppColors.seedGreen,
     brightness: Brightness.light,
-    secondary: MyAppColors.accentYellow,
+    secondary: MyAppColors.lightPurple,
   );
 
   static final darkScheme = ColorScheme.fromSeed(
     seedColor: MyAppColors.seedGreen,
     brightness: Brightness.dark,
-    secondary: MyAppColors.accentYellow,
+    secondary: MyAppColors.accentPurple,
   );
 }
 
@@ -67,7 +68,7 @@ class MyAppTheme {
       .copyWith(
         //!   <----- Core text and color ----->
         textTheme: MyAppTextTheme.light,
-        scaffoldBackgroundColor: MyAppScheme.lightScheme.onSurface,
+        scaffoldBackgroundColor: MyAppScheme.lightScheme.surfaceDim,
 
         //!   <----- AppBar ----->
         appBarTheme: AppBarTheme(
@@ -244,7 +245,7 @@ class MyAppTheme {
       .copyWith(
         //!   <----- Core text and color ----->
         textTheme: MyAppTextTheme.dark,
-        scaffoldBackgroundColor: MyAppScheme.darkScheme.onSurface,
+        scaffoldBackgroundColor: MyAppScheme.darkScheme.surfaceBright,
 
         //!   <----- AppBar ----->
         appBarTheme: AppBarTheme(

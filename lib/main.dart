@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_happy_place/screens/places_screen.dart';
-
 import 'data/app_theme.dart';
 
 void main() {
   runApp(const MyApp());
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
