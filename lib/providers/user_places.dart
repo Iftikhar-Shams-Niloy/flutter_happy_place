@@ -11,6 +11,8 @@ class UserPlacesNotifier extends StateNotifier<List<Place>> {
   }
 }
 
-final userPlacesProvider = StateNotifierProvider(
-  (ref) => UserPlacesNotifier(),
-);
+//* <--- By defining the <UserPlacesNotifier, List<Place>>, we are making dart aware what kind of data it will be. --->
+final userPlacesProvider =
+    StateNotifierProvider<UserPlacesNotifier, List<Place>>(
+      (ref) => UserPlacesNotifier(),
+    );
