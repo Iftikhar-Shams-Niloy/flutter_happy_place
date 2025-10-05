@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_happy_place/screens/places_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'data/app_theme.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ProviderScope( //*Provider for using river_pod
+      child: const MyApp(),
+    ),
+  );
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
