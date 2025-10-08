@@ -239,6 +239,16 @@ class MyAppTheme {
           color: MyAppScheme.lightScheme.surface,
           textStyle: MyAppTextTheme.light.bodyMedium,
         ),
+        //! Page transition theme (platform-specific)
+        pageTransitionsTheme: const PageTransitionsTheme(
+          builders: {
+            TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
+            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+            TargetPlatform.windows: FadeUpwardsPageTransitionsBuilder(),
+            TargetPlatform.linux: FadeUpwardsPageTransitionsBuilder(),
+            TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
+          },
+        ),
       );
 
   static final darkTheme = ThemeData.from(colorScheme: MyAppScheme.darkScheme)
@@ -409,6 +419,16 @@ class MyAppTheme {
         popupMenuTheme: PopupMenuThemeData(
           color: MyAppScheme.darkScheme.surface,
           textStyle: MyAppTextTheme.dark.bodyMedium,
+        ),
+        // Page transition theme (platform-specific)
+        pageTransitionsTheme: const PageTransitionsTheme(
+          builders: {
+            TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
+            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+            TargetPlatform.windows: FadeUpwardsPageTransitionsBuilder(),
+            TargetPlatform.linux: FadeUpwardsPageTransitionsBuilder(),
+            TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
+          },
         ),
       );
 }

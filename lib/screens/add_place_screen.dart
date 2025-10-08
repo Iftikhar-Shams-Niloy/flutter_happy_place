@@ -36,7 +36,10 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("What new place made you"),
+        title: Text(
+          "Which new place made you happy?",
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),

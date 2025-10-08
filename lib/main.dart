@@ -5,7 +5,8 @@ import 'data/app_theme.dart';
 
 void main() {
   runApp(
-    ProviderScope( //*Provider for using river_pod
+    ProviderScope(
+      //*Provider for using river_pod
       child: const MyApp(),
     ),
   );
