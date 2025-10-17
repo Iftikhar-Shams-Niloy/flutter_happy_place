@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImageInput extends StatefulWidget {
-  const ImageInput({super.key});
+  const ImageInput({super.key, required this.onPickedImage});
+
+  //* onPickedImage function will be passed to the parent (AddPlaceScreen()) after it is executed
+  final void Function(File image) onPickedImage;
 
   @override
   State<ImageInput> createState() {
@@ -27,6 +30,8 @@ class _ImageInputState extends State<ImageInput> {
         _selectedImage = File(pickedImage.path);
       });
     }
+
+    widget.onPickedImage(_selectedImage!);
   }
 
   void _chooseImage() async {

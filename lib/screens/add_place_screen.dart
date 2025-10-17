@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_happy_place/providers/user_places.dart';
 import 'package:flutter_happy_place/widgets/image_input.dart';
@@ -14,16 +17,39 @@ class AddPlaceScreen extends ConsumerStatefulWidget {
 
 class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
   final _titleController = TextEditingController();
+  File? _selectedImage;
 
   void _savePlace() {
     final enteredTitle = _titleController.text;
-    if (enteredTitle.isEmpty) {
+    if (enteredTitle.isEmpty || _selectedImage == null) {
+      FocusScope.of(context).unfocus();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "You cannot leave any field empty!",
+            textAlign: TextAlign.center,
+            textScaler: TextScaler.linear(1.5),
+          ),
+          backgroundColor: Colors.red,
+          duration: const Duration(milliseconds: 2500),
+        ),
+      );
       return;
     }
     ref
         .read(userPlacesProvider.notifier) //* reads from the provider
-        .addPlace(enteredTitle);
-
+        .addPlace(enteredTitle, _selectedImage!);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          "Happy place added successfully!",
+          textAlign: TextAlign.center,
+          textScaler: TextScaler.linear(1.5),
+        ),
+        backgroundColor: Colors.green,
+        duration: const Duration(milliseconds: 2500),
+      ),
+    );
     Navigator.of(context).pop();
   }
 
@@ -53,7 +79,11 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
 
             const SizedBox(height: 16),
 
-            ImageInput(),
+            ImageInput(
+              onPickedImage: (image) {
+                _selectedImage = image;
+              },
+            ),
 
             ElevatedButton.icon(
               onPressed: _savePlace,
