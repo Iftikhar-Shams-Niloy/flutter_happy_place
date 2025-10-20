@@ -23,21 +23,33 @@ class PlacesList extends StatelessWidget {
           return Card(
             elevation: 4,
             shadowColor: cardShadowColor,
-            child: ListTile(
-              title: Text(
-                placesList[index].title,
-                style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 16.0,
               ),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (ctx) =>
-                        PlacesDetailScreen(place: placesList[index]),
+              child: ListTile(
+                leading: CircleAvatar(
+                  radius: 32,
+                  backgroundColor: Theme.of(
+                    context,
+                  ).colorScheme.secondaryContainer,
+                  foregroundImage: FileImage(placesList[index].image),
+                ),
+                title: Text(
+                  placesList[index].title,
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
-                );
-              },
+                ),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (ctx) =>
+                          PlacesDetailScreen(place: placesList[index]),
+                    ),
+                  );
+                },
+              ),
             ),
           );
         },

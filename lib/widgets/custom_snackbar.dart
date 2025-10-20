@@ -18,10 +18,8 @@ class CustomSnackbar {
         ? theme.colorScheme.onError
         : theme.colorScheme.onPrimary;
 
-    // hide any current material SnackBar
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
-    // Use Overlay to show a custom sliding snackbar from the bottom
     late OverlayEntry entry;
     entry = OverlayEntry(
       builder: (ctx) {
@@ -43,7 +41,6 @@ class CustomSnackbar {
     overlay.insert(entry);
   }
 
-  /// If you prefer to get the SnackBar widget and show it yourself:
   static SnackBar build(
     BuildContext context,
     String message, {
@@ -71,7 +68,7 @@ class CustomSnackbar {
       content: Text(
         message,
         textAlign: TextAlign.center,
-        textScaleFactor: textScale,
+        textScaler: TextScaler.linear(textScale),
         style: TextStyle(color: onBackground),
       ),
       action: actionLabel != null
@@ -158,7 +155,6 @@ class _SlidingSnackBarState extends State<_SlidingSnackBar>
 
   @override
   Widget build(BuildContext context) {
-    // position at the bottom, avoid system UI
     return Positioned(
       left: 0,
       right: 0,
@@ -195,7 +191,7 @@ class _SlidingSnackBarState extends State<_SlidingSnackBar>
                       child: Text(
                         widget.message,
                         textAlign: TextAlign.center,
-                        textScaleFactor: widget.textScale,
+                        textScaler: TextScaler.linear(widget.textScale),
                         style: TextStyle(color: widget.onBackground),
                       ),
                     ),
@@ -216,6 +212,4 @@ class _SlidingSnackBarState extends State<_SlidingSnackBar>
       ),
     );
   }
-
-  // removed duplicate build helper (use CustomSnackbar.build instead)
 }
