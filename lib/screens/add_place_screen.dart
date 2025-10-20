@@ -6,6 +6,8 @@ import 'package:flutter_happy_place/providers/user_places.dart';
 import 'package:flutter_happy_place/widgets/image_input.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../widgets/custom_snackbar.dart';
+
 class AddPlaceScreen extends ConsumerStatefulWidget {
   const AddPlaceScreen({super.key});
 
@@ -23,32 +25,20 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
     final enteredTitle = _titleController.text;
     if (enteredTitle.isEmpty || _selectedImage == null) {
       FocusScope.of(context).unfocus();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            "You cannot leave any field empty!",
-            textAlign: TextAlign.center,
-            textScaler: TextScaler.linear(1.5),
-          ),
-          backgroundColor: Colors.red,
-          duration: const Duration(milliseconds: 2500),
-        ),
+      CustomSnackbar.show(
+        context,
+        "You cannot leave any field empty!",
+        isError: true,
       );
       return;
     }
     ref
         .read(userPlacesProvider.notifier) //* reads from the provider
         .addPlace(enteredTitle, _selectedImage!);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          "Happy place added successfully!",
-          textAlign: TextAlign.center,
-          textScaler: TextScaler.linear(1.5),
-        ),
-        backgroundColor: Colors.green,
-        duration: const Duration(milliseconds: 2500),
-      ),
+    CustomSnackbar.show(
+      context,
+      "New happy place added successfully!",
+      isError: false,
     );
     Navigator.of(context).pop();
   }
