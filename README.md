@@ -48,11 +48,6 @@ cd flutter_happy_place</code></pre>
     <li><code>/assets/</code> — Static assets (icons, images)</li>
   </ul>
 
-  <h2>Missing Piece: Map-based Location Picker</h2>
-  <p>
-    The repository currently lacks the map-based location picker. The rest of the flow (list of saved titles, image and navigation to add screen) is present. To enable full functionality, implement a screen that allows the user to select a point on a map and return the selected coordinates (latitude and longitude) to the "Add New Location" screen so the app can save them along with the title.
-  </p>
-
   <h3>Implementation Suggestions</h3>
   <p>Two common options:</p>
   <ul>
