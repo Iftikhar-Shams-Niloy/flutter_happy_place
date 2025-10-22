@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_happy_place/providers/user_places.dart';
 import 'package:flutter_happy_place/widgets/image_input.dart';
+import 'package:flutter_happy_place/widgets/location_input.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../widgets/custom_snackbar.dart';
@@ -69,11 +70,17 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
 
             const SizedBox(height: 16),
 
-            ImageInput(
+            ImageInputWidget(
               onPickedImage: (image) {
                 _selectedImage = image;
               },
             ),
+
+            const SizedBox(height: 16),
+
+            LocationInputWidget(),
+
+            const SizedBox(height: 16),
 
             ElevatedButton.icon(
               onPressed: _savePlace,

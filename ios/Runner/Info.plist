@@ -2,10 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>The location for your happy place</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Pick your favorite place image from gallery</string>
+	<string>Pick your happy place image from gallery</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Capture your favorite place image</string>
+	<string>Capture your happy place image</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

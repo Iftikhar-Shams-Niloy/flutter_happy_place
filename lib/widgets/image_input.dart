@@ -3,19 +3,19 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class ImageInput extends StatefulWidget {
-  const ImageInput({super.key, required this.onPickedImage});
+class ImageInputWidget extends StatefulWidget {
+  const ImageInputWidget({super.key, required this.onPickedImage});
 
   //* onPickedImage function will be passed to the parent (AddPlaceScreen()) after it is executed
   final void Function(File image) onPickedImage;
 
   @override
-  State<ImageInput> createState() {
-    return _ImageInputState();
+  State<ImageInputWidget> createState() {
+    return _ImageInputWidgetState();
   }
 }
 
-class _ImageInputState extends State<ImageInput> {
+class _ImageInputWidgetState extends State<ImageInputWidget> {
   File? _selectedImage;
   void _captureImage() async {
     final imagePicker = ImagePicker();
