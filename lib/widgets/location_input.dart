@@ -10,6 +10,10 @@ class LocationInputWidget extends StatefulWidget {
 }
 
 class _LocationInputWidgetState extends State<LocationInputWidget> {
+  void _getCurrentLocation(){
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -22,19 +26,24 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
             border: Border.all(width: 3),
             borderRadius: BorderRadius.all(Radius.circular(8)),
           ),
+          child: Text("No location chosen!", textAlign: TextAlign.center),
         ),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ElevatedButton.icon(
-              icon: const Icon(Icons.location_on),
-              label: const Text("Get Current Location"),
-              onPressed: () {},
+            Card(
+              child: TextButton.icon(
+                onPressed: () {},
+                icon: const Icon(Icons.location_on),
+                label: const Text("Current Location"),
+              ),
             ),
-            ElevatedButton.icon(
-              icon: const Icon(Icons.map_rounded),
-              label: const Text("Pick Location on Map"),
-              onPressed: () {},
+            Card(
+              child: TextButton.icon(
+                onPressed: () {},
+                icon: const Icon(Icons.map_rounded),
+                label: const Text("Pick Location"),
+              ),
             ),
           ],
         ),
