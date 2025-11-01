@@ -1,5 +1,8 @@
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:flutter_happy_place/widgets/open_state_map.dart';
 
 class LocationInputWidget extends StatefulWidget {
   const LocationInputWidget({super.key});
@@ -11,7 +14,8 @@ class LocationInputWidget extends StatefulWidget {
 }
 
 class _LocationInputWidgetState extends State<LocationInputWidget> {
-  Location? _pickedLocation;
+  LatLng? _pickedLocation;
+  ui.Image? _mapSnapshot;
   var _isGettingLocation = false;
 
   void _getCurrentLocation() async {
@@ -19,40 +23,74 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
     bool serviceEnabled;
     PermissionStatus permissionGranted;
     LocationData locationData;
+
+    setState(() {
+      _isGettingLocation = true;
+    });
+
     serviceEnabled = await location.serviceEnabled();
     if (!serviceEnabled) {
       serviceEnabled = await location.requestService();
       if (!serviceEnabled) {
+        setState(() {
+          _isGettingLocation = false;
+        });
         return;
       }
     }
+
     permissionGranted = await location.hasPermission();
     if (permissionGranted == PermissionStatus.denied) {
       permissionGranted = await location.requestPermission();
       if (permissionGranted != PermissionStatus.granted) {
+        setState(() {
+          _isGettingLocation = false;
+        });
         return;
       }
     }
-    setState(() {
-      _isGettingLocation = true;
-    });
+
     locationData = await location.getLocation();
+
     setState(() {
       _isGettingLocation = false;
+      _pickedLocation = LatLng(locationData.latitude!, locationData.longitude!);
     });
-    print(locationData.latitude);
-    print(locationData.longitude);
+
+    // Navigate to map and get snapshot
+    if (!mounted) return;
+    final capturedImage = await Navigator.of(context).push<ui.Image>(
+      MaterialPageRoute(
+        builder: (ctx) => OpenStateMap(initialLocation: _pickedLocation),
+      ),
+    );
+
+    if (capturedImage != null) {
+      setState(() {
+        _mapSnapshot = capturedImage;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    Widget previewContent = Text(
+    Widget previewContent = const Text(
       "No location chosen!",
       textAlign: TextAlign.center,
     );
 
-    if (_isGettingLocation == true) {
+    if (_isGettingLocation) {
       previewContent = const CircularProgressIndicator();
+    } else if (_mapSnapshot != null) {
+      previewContent = ClipRRect(
+        borderRadius: const BorderRadius.all(Radius.circular(8)),
+        child: RawImage(
+          image: _mapSnapshot,
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: double.infinity,
+        ),
+      );
     }
 
     return Column(
@@ -62,29 +100,19 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
           width: double.infinity,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            border: Border.all(width: 3),
-            borderRadius: BorderRadius.all(Radius.circular(8)),
+            border: Border.all(
+              width: 3,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
           ),
           child: previewContent,
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Card(
-              child: TextButton.icon(
-                onPressed: _getCurrentLocation,
-                icon: const Icon(Icons.location_on),
-                label: const Text("Current Location"),
-              ),
-            ),
-            Card(
-              child: TextButton.icon(
-                onPressed: () {},
-                icon: const Icon(Icons.map_rounded),
-                label: const Text("Pick Location"),
-              ),
-            ),
-          ],
+        const SizedBox(height: 12),
+        TextButton.icon(
+          onPressed: _isGettingLocation ? null : _getCurrentLocation,
+          icon: const Icon(Icons.location_on),
+          label: const Text("Get Current Location & Capture Map"),
         ),
       ],
     );
