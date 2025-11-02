@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:ui' as ui;
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
+// Note: removed flutter_map_location_marker import because we no longer show
+// the default location marker on entry. Keep the package dependency only if
+// used elsewhere in the app.
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
@@ -23,11 +25,13 @@ class _OpenStateMap extends State<OpenStateMap> {
   final GlobalKey _mapKey = GlobalKey();
   LatLng? _currentLocation;
   bool _isLoading = true;
+  double _currentZoom = 13.0;
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
   List<Map<String, dynamic>> _searchSuggestions = [];
   bool _isSearching = false;
   Timer? _debounce;
+  Timer? _singleTapTimer;
   List<Marker> _searchMarkers = [];
 
   @override
@@ -70,6 +74,8 @@ class _OpenStateMap extends State<OpenStateMap> {
         locationSettings: locationSettings,
       );
 
+      if (!mounted) return;
+
       setState(() {
         _currentLocation = LatLng(position.latitude, position.longitude);
         _isLoading = false;
@@ -101,11 +107,66 @@ class _OpenStateMap extends State<OpenStateMap> {
     }
   }
 
+  Future<void> _goToCurrentLocation() async {
+    try {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        throw 'Location services are disabled.';
+      }
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          throw 'Location permissions are denied';
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        throw 'Location permissions are permanently denied, we cannot request permissions.';
+      }
+
+      final LocationSettings locationSettings = LocationSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 100,
+      );
+
+      Position position = await Geolocator.getCurrentPosition(
+        locationSettings: locationSettings,
+      );
+
+      if (!mounted) return;
+
+      final latLng = LatLng(position.latitude, position.longitude);
+
+      setState(() {
+        _currentLocation = latLng;
+        _searchMarkers = [
+          Marker(
+            point: latLng,
+            width: 40,
+            height: 40,
+            child: const Icon(Icons.location_on, color: Colors.red, size: 40),
+          ),
+        ];
+      });
+
+      _myMapController.move(latLng, 15.0);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error getting current location: $e')),
+        );
+      }
+    }
+  }
+
   @override
   void dispose() {
     _searchController.dispose();
     _searchFocusNode.dispose();
     _debounce?.cancel();
+    _singleTapTimer?.cancel();
     super.dispose();
   }
 
@@ -201,30 +262,55 @@ class _OpenStateMap extends State<OpenStateMap> {
               options: MapOptions(
                 initialCenter:
                     _currentLocation ?? const LatLng(40.7128, -74.0060),
-                initialZoom: 13.0,
-                minZoom: 3.0,
-                maxZoom: 18.0,
+                initialZoom: _currentZoom,
+                minZoom: 2.0,
+                maxZoom: 20.0,
+                onPositionChanged: (position, _) {
+                  // keep track of current zoom so we can increment on double-tap
+                  _currentZoom = position.zoom;
+                },
                 onTap: (tapPosition, point) {
-                  // Hide suggestions when tapping on map
-                  setState(() {
-                    _searchSuggestions = [];
-                  });
-                  _searchFocusNode.unfocus();
+                  // Distinguish single-tap (place marker) from double-tap (zoom in).
+                  // We implement this by deferring the single-tap action briefly and
+                  // cancelling it if a second tap arrives.
+                  if (_singleTapTimer?.isActive ?? false) {
+                    // second tap within threshold => treat as double-tap: zoom in
+                    _singleTapTimer!.cancel();
+                    final newZoom = (_currentZoom + 1).clamp(3.0, 18.0);
+                    _myMapController.move(point, newZoom);
+                    _currentZoom = newZoom;
+                  } else {
+                    // start timer to commit single-tap after short delay
+                    _singleTapTimer = Timer(
+                      const Duration(milliseconds: 250),
+                      () {
+                        if (!mounted) return;
+                        setState(() {
+                          _currentLocation = point;
+                          _searchSuggestions = [];
+                          _searchMarkers = [
+                            Marker(
+                              point: point,
+                              width: 40,
+                              height: 40,
+                              child: const Icon(
+                                Icons.location_on,
+                                color: Colors.red,
+                                size: 40,
+                              ),
+                            ),
+                          ];
+                        });
+                        _searchFocusNode.unfocus();
+                      },
+                    );
+                  }
                 },
               ),
               children: [
                 TileLayer(
                   urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                   userAgentPackageName: 'com.example.flutter_open_state_map',
-                ),
-                CurrentLocationLayer(
-                  style: LocationMarkerStyle(
-                    marker: DefaultLocationMarker(
-                      child: Icon(Icons.location_pin, color: Colors.red),
-                    ),
-                    markerSize: const Size(32, 32),
-                    markerDirection: MarkerDirection.heading,
-                  ),
                 ),
                 if (_searchMarkers.isNotEmpty)
                   MarkerLayer(markers: _searchMarkers),
@@ -262,6 +348,9 @@ class _OpenStateMap extends State<OpenStateMap> {
                       suffixIcon: _searchController.text.isNotEmpty
                           ? IconButton(
                               icon: const Icon(Icons.clear),
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.secondary,
                               onPressed: () {
                                 _searchController.clear();
                                 setState(() {
@@ -324,11 +413,25 @@ class _OpenStateMap extends State<OpenStateMap> {
             child: Center(
               child: FloatingActionButton.extended(
                 onPressed: _captureMapSnapshot,
+                heroTag: 'captureFab',
                 backgroundColor: Theme.of(context).colorScheme.primary,
                 foregroundColor: Theme.of(context).colorScheme.onPrimary,
                 icon: const Icon(Icons.camera_alt),
                 label: const Text('Capture Map'),
               ),
+            ),
+          ),
+
+          //*<--- Recenter (current location) button in bottom-right --->
+          Positioned(
+            bottom: 30,
+            right: 16,
+            child: FloatingActionButton(
+              heroTag: 'recenterFab',
+              onPressed: _goToCurrentLocation,
+              backgroundColor: Theme.of(context).colorScheme.secondary,
+              foregroundColor: Theme.of(context).colorScheme.onSecondary,
+              child: const Icon(Icons.my_location),
             ),
           ),
         ],
