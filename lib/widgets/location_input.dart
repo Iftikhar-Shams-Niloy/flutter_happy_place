@@ -1,11 +1,15 @@
 import 'dart:ui' as ui;
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_happy_place/widgets/open_state_map.dart';
 
 class LocationInputWidget extends StatefulWidget {
-  const LocationInputWidget({super.key});
+  const LocationInputWidget({super.key, this.onMapSnapshotPicked});
+
+  // Callback when a map snapshot file is available (PNG file)
+  final void Function(File? mapSnapshot)? onMapSnapshotPicked;
   @override
   State<LocationInputWidget> createState() {
     return _LocationInputWidgetState();
@@ -65,9 +69,30 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
     );
 
     if (capturedImage != null) {
-      setState(() {
-        _mapSnapshot = capturedImage;
-      });
+      // convert ui.Image to PNG bytes and save to a temp file
+      final byteData = await capturedImage.toByteData(
+        format: ui.ImageByteFormat.png,
+      );
+      if (byteData != null) {
+        final bytes = byteData.buffer.asUint8List();
+        final tempDir = Directory.systemTemp;
+        final file = await File(
+          '${tempDir.path}/map_snapshot_${DateTime.now().millisecondsSinceEpoch}.png',
+        ).create();
+        await file.writeAsBytes(bytes);
+        if (!mounted) return;
+        setState(() {
+          _mapSnapshot = capturedImage;
+        });
+        // notify parent widget (e.g., AddPlaceScreen) about the saved file
+        widget.onMapSnapshotPicked?.call(file);
+      } else {
+        if (!mounted) return;
+        setState(() {
+          _mapSnapshot = capturedImage;
+        });
+        widget.onMapSnapshotPicked?.call(null);
+      }
     }
   }
 

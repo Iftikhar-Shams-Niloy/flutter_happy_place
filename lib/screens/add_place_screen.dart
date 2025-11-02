@@ -18,6 +18,7 @@ class AddPlaceScreen extends ConsumerStatefulWidget {
 class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
   final _titleController = TextEditingController();
   File? _selectedImage;
+  File? _mapSnapshotFile;
 
   void _savePlace() {
     final enteredTitle = _titleController.text;
@@ -32,7 +33,7 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
     }
     ref
         .read(userPlacesProvider.notifier) //* reads from the provider
-        .addPlace(enteredTitle, _selectedImage!);
+        .addPlace(enteredTitle, _selectedImage!, _mapSnapshotFile);
     CustomSnackbar.show(
       context,
       "New happy place added successfully!",
@@ -101,7 +102,13 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
 
                   const SizedBox(height: 16),
 
-                  LocationInputWidget(),
+                  LocationInputWidget(
+                    onMapSnapshotPicked: (file) {
+                      setState(() {
+                        _mapSnapshotFile = file;
+                      });
+                    },
+                  ),
 
                   const SizedBox(height: 16),
 
