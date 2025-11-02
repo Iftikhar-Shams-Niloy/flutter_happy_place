@@ -54,7 +54,7 @@ class _ImageInputWidgetState extends State<ImageInputWidget> {
     Widget content = Text("Nothing to show!");
     if (_selectedImage != null) {
       content = ClipRRect(
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(8),
         child: Image.file(
           _selectedImage!,
           fit: BoxFit.cover,
@@ -71,10 +71,12 @@ class _ImageInputWidgetState extends State<ImageInputWidget> {
           alignment: Alignment.center,
           decoration: BoxDecoration(
             border: Border.all(width: 3),
-            borderRadius: BorderRadius.all(Radius.circular(8)),
+            borderRadius: BorderRadius.all(Radius.circular(10)),
           ),
           child: content,
         ),
+
+        const SizedBox(height: 4),
 
         Row(
           mainAxisAlignment: MainAxisAlignment.center,

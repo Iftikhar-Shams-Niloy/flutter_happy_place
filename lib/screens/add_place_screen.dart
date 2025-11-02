@@ -1,11 +1,9 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_happy_place/providers/user_places.dart';
 import 'package:flutter_happy_place/widgets/image_input.dart';
 import 'package:flutter_happy_place/widgets/location_input.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../widgets/custom_snackbar.dart';
 
 class AddPlaceScreen extends ConsumerStatefulWidget {
@@ -51,42 +49,71 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Which new place made you happy?",
-          style: Theme.of(context).textTheme.titleLarge,
+    const double radius = 10.0;
+    const double borderWidth = 8.0;
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(radius),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Theme.of(context).colorScheme.onPrimary,
+              Theme.of(context).colorScheme.primary,
+            ],
+          ),
         ),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            TextField(
-              decoration: InputDecoration(labelText: "Title"),
-              controller: _titleController,
+        padding: const EdgeInsets.all(borderWidth),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            borderRadius: BorderRadius.circular(radius - borderWidth),
+          ),
+          child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: Theme.of(context).colorScheme.onPrimary,
+              iconTheme: IconThemeData(
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              title: Text(
+                "Which new place made you happy?",
+                style: TextStyle(color: Theme.of(context).colorScheme.primary),
+              ),
             ),
+            body: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  TextField(
+                    decoration: InputDecoration(labelText: "Title"),
+                    controller: _titleController,
+                  ),
 
-            const SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
-            ImageInputWidget(
-              onPickedImage: (image) {
-                _selectedImage = image;
-              },
+                  ImageInputWidget(
+                    onPickedImage: (image) {
+                      _selectedImage = image;
+                    },
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  LocationInputWidget(),
+
+                  const SizedBox(height: 16),
+
+                  ElevatedButton.icon(
+                    onPressed: _savePlace,
+                    label: const Text("Add Place"),
+                    icon: const Icon(Icons.add),
+                  ),
+                ],
+              ),
             ),
-
-            const SizedBox(height: 16),
-
-            LocationInputWidget(),
-
-            const SizedBox(height: 16),
-
-            ElevatedButton.icon(
-              onPressed: _savePlace,
-              label: const Text("Add Place"),
-              icon: const Icon(Icons.add),
-            ),
-          ],
+          ),
         ),
       ),
     );

@@ -52,8 +52,13 @@ class _OpenStateMap extends State<OpenStateMap> {
         throw 'Location permissions are permanently denied, we cannot request permissions.';
       }
 
+      final LocationSettings locationSettings = LocationSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 100,
+      );
+
       Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
+        locationSettings: locationSettings,
       );
 
       setState(() {
@@ -136,7 +141,8 @@ class _OpenStateMap extends State<OpenStateMap> {
             child: Center(
               child: FloatingActionButton.extended(
                 onPressed: _captureMapSnapshot,
-                backgroundColor: Colors.blue,
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                foregroundColor: Theme.of(context).colorScheme.onPrimary,
                 icon: const Icon(Icons.camera_alt),
                 label: const Text('Capture Map'),
               ),

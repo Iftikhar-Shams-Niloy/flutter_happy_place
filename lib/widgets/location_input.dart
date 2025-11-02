@@ -6,7 +6,6 @@ import 'package:flutter_happy_place/widgets/open_state_map.dart';
 
 class LocationInputWidget extends StatefulWidget {
   const LocationInputWidget({super.key});
-
   @override
   State<LocationInputWidget> createState() {
     return _LocationInputWidgetState();
@@ -57,7 +56,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
       _pickedLocation = LatLng(locationData.latitude!, locationData.longitude!);
     });
 
-    // Navigate to map and get snapshot
+    //* Navigate to map and get snapshot
     if (!mounted) return;
     final capturedImage = await Navigator.of(context).push<ui.Image>(
       MaterialPageRoute(
@@ -102,17 +101,18 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
           decoration: BoxDecoration(
             border: Border.all(
               width: 3,
-              color: Theme.of(context).colorScheme.primary,
             ),
-            borderRadius: const BorderRadius.all(Radius.circular(8)),
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
           ),
           child: previewContent,
         ),
-        const SizedBox(height: 12),
-        TextButton.icon(
-          onPressed: _isGettingLocation ? null : _getCurrentLocation,
-          icon: const Icon(Icons.location_on),
-          label: const Text("Get Current Location & Capture Map"),
+        const SizedBox(height: 4),
+        Card(
+          child: TextButton.icon(
+            onPressed: _isGettingLocation ? null : _getCurrentLocation,
+            icon: const Icon(Icons.location_on),
+            label: const Text("Get Current Location & Capture Map"),
+          ),
         ),
       ],
     );
