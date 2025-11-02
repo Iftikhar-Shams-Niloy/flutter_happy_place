@@ -19,12 +19,61 @@ class PlacesDetailScreen extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: ImageCard(
-              height: screenHeight / 2,
-              width: screenWidth / 2,
-              borderColor: Theme.of(context).colorScheme.secondary,
-              shadowColor: Theme.of(context).colorScheme.primary,
-              imageProvider: FileImage(place.image),
+            child: Builder(
+              builder: (context) {
+                final double padding = 16.0;
+                final double spacing = 16.0;
+                final double cardWidth =
+                    (screenWidth - padding * 2 - spacing) / 2;
+                final double cardHeight = screenHeight / 2;
+                return Row(
+                  children: [
+                    ImageCard(
+                      height: cardHeight,
+                      width: cardWidth,
+                      borderColor: Theme.of(context).colorScheme.secondary,
+                      shadowColor: Theme.of(context).colorScheme.primary,
+                      imageProvider: FileImage(place.image),
+                    ),
+                    const SizedBox(width: 16),
+                    // map snapshot card (shows placeholder if no snapshot available)
+                    place.mapSnapshot != null
+                        ? ImageCard(
+                            height: cardHeight,
+                            width: cardWidth,
+                            borderColor: Theme.of(
+                              context,
+                            ).colorScheme.secondary,
+                            shadowColor: Theme.of(context).colorScheme.primary,
+                            imageProvider: FileImage(place.mapSnapshot!),
+                          )
+                        : Container(
+                            height: cardHeight,
+                            width: cardWidth,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Theme.of(context).colorScheme.secondary,
+                                width: 4,
+                              ),
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  blurRadius: 8,
+                                  spreadRadius: 4,
+                                  offset: const Offset(0, 0),
+                                ),
+                              ],
+                            ),
+                            alignment: Alignment.center,
+                            child: Text(
+                              'No map snapshot',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          ),
+                  ],
+                );
+              },
             ),
           ),
           Text(
