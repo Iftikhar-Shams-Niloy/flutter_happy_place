@@ -17,23 +17,30 @@ class AddPlaceScreen extends ConsumerStatefulWidget {
 
 class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
   final _titleController = TextEditingController();
+  final _detailsController = TextEditingController();
   File? _selectedImage;
   File? _mapSnapshotFile;
 
   void _savePlace() {
     final enteredTitle = _titleController.text;
-    if (enteredTitle.isEmpty || _selectedImage == null) {
+    final enteredDetails = _detailsController.text;
+    if (enteredTitle.isEmpty || enteredDetails.isEmpty) {
       FocusScope.of(context).unfocus();
       CustomSnackbar.show(
         context,
-        "You cannot leave any field empty!",
+        "You cannot leave title or details field empty!",
         isError: true,
       );
       return;
     }
     ref
         .read(userPlacesProvider.notifier) //* reads from the provider
-        .addPlace(enteredTitle, _selectedImage!, _mapSnapshotFile);
+        .addPlace(
+          enteredTitle,
+          enteredDetails,
+          _selectedImage!,
+          _mapSnapshotFile!,
+        );
     CustomSnackbar.show(
       context,
       "New happy place added successfully!",
@@ -89,7 +96,28 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
                 children: [
                   TextField(
                     decoration: InputDecoration(labelText: "Title"),
+                    maxLines: 1,
+                    maxLength: 50,
                     controller: _titleController,
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  TextField(
+                    decoration: InputDecoration(
+                      labelText: "Details",
+                      alignLabelWithHint: true,
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 12,
+                        horizontal: 12,
+                      ),
+                    ),
+                    keyboardType: TextInputType.multiline,
+                    textInputAction: TextInputAction.newline,
+                    minLines: 3,
+                    maxLines: null,
+                    maxLength: 300,
+                    controller: _detailsController,
                   ),
 
                   const SizedBox(height: 16),

@@ -5,9 +5,10 @@ import 'package:flutter_riverpod/legacy.dart';
 class UserPlacesNotifier extends StateNotifier<List<Place>> {
   UserPlacesNotifier() : super(const []);
 
-  void addPlace(String title, File image, [File? mapSnapshot]) {
+  void addPlace(String title,String details, File image, [File? mapSnapshot]) {
     final newPlace = Place(
       title: title,
+      details: details,
       image: image,
       mapSnapshot: mapSnapshot,
     );
