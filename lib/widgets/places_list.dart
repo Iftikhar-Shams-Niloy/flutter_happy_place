@@ -33,7 +33,7 @@ class PlacesList extends StatelessWidget {
                   backgroundColor: Theme.of(
                     context,
                   ).colorScheme.secondaryContainer,
-                  foregroundImage: FileImage(placesList[index].image),
+                  foregroundImage: FileImage(placesList[index].image!),
                 ),
                 title: Text(
                   placesList[index].title,

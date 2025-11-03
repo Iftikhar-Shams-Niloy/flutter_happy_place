@@ -9,7 +9,6 @@ class Place {
 
   final String id;
   final String title;
-  final File image;
-  // optional saved map snapshot (PNG file)
+  final File? image;
   final File? mapSnapshot;
 }
