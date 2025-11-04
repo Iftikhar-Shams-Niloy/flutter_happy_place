@@ -4,12 +4,27 @@ import 'package:flutter_happy_place/screens/add_place_screen.dart';
 import 'package:flutter_happy_place/widgets/places_list.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class PlacesScreen extends ConsumerWidget {
+class PlacesScreen extends ConsumerStatefulWidget {
   const PlacesScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef myRef) {
-    final userPlaces = myRef.watch(userPlacesProvider);
+  ConsumerState<PlacesScreen> createState() {
+    return _PlacesScreenState();
+  }
+}
+
+class _PlacesScreenState extends ConsumerState<PlacesScreen> {
+  late Future<void> _placesFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _placesFuture = ref.read(userPlacesProvider.notifier).loadPlaces();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final userPlaces = ref.watch(userPlacesProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -45,8 +60,19 @@ class PlacesScreen extends ConsumerWidget {
       body: Padding(
         padding: const EdgeInsets.only(top: 8.0),
         child: SafeArea(
-          child: PlacesList(
-            placesList: userPlaces,
+          child: FutureBuilder(
+            future: _placesFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+
+              return PlacesList(
+                placesList: userPlaces,
+              );
+            },
           ),
         ),
       ),

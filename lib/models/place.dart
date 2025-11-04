@@ -5,11 +5,12 @@ final myUuid = const Uuid();
 
 class Place {
   Place({
+    String? id,
     required this.title,
     required this.details,
     required this.image,
-    this.mapSnapshot,
-  }) : id = myUuid.v4();
+    required this.mapSnapshot,
+  }) : id = id ?? myUuid.v4();
 
   final String id;
   final String title;
