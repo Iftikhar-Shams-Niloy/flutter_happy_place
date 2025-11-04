@@ -34,8 +34,10 @@ class PlacesDetailScreen extends StatelessWidget {
                             width: cardWidth,
                             borderColor: Theme.of(
                               context,
+                            ).colorScheme.secondaryContainer,
+                            shadowColor: Theme.of(
+                              context,
                             ).colorScheme.secondary,
-                            shadowColor: Theme.of(context).colorScheme.primary,
                             imageProvider: FileImage(place.image!),
                           )
                         : PlaceHolderContainer(
@@ -52,8 +54,10 @@ class PlacesDetailScreen extends StatelessWidget {
                             width: cardWidth,
                             borderColor: Theme.of(
                               context,
-                            ).colorScheme.secondary,
-                            shadowColor: Theme.of(context).colorScheme.primary,
+                            ).colorScheme.primaryContainer,
+                            shadowColor: Theme.of(
+                              context,
+                            ).colorScheme.primary,
                             imageProvider: FileImage(place.mapSnapshot!),
                           )
                         : PlaceHolderContainer(
@@ -66,9 +70,25 @@ class PlacesDetailScreen extends StatelessWidget {
               },
             ),
           ),
-          Text(
-            place.title,
-            style: Theme.of(context).textTheme.titleMedium,
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 8.0,
+              horizontal: 16.0,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  place.title,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  place.details,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ],
+            ),
           ),
         ],
       ),

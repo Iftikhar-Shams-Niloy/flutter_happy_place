@@ -34,8 +34,8 @@ class ImageCard extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: shadowColor,
-            blurRadius: 8,
-            spreadRadius: 4,
+            blurRadius: 4,
+            spreadRadius: 2,
             offset: const Offset(0, 0),
           ),
         ],
