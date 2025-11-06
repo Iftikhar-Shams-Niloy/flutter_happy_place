@@ -116,7 +116,7 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
                     textInputAction: TextInputAction.newline,
                     minLines: 3,
                     maxLines: null,
-                    maxLength: 300,
+                    maxLength: 500,
                     controller: _detailsController,
                   ),
 

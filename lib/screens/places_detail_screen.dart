@@ -80,12 +80,12 @@ class PlacesDetailScreen extends StatelessWidget {
               children: [
                 Text(
                   place.title,
-                  style: Theme.of(context).textTheme.titleMedium,
+                  style: TextStyle(fontSize: 24),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   place.details,
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: TextStyle(fontSize: 18),
                 ),
               ],
             ),

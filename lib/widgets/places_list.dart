@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_happy_place/screens/places_detail_screen.dart';
 
 import '../models/place.dart';
@@ -43,9 +43,23 @@ class PlacesList extends StatelessWidget {
                 ),
                 onTap: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (ctx) =>
+                    PageRouteBuilder(
+                      transitionDuration: const Duration(milliseconds: 500),
+                      pageBuilder: (context, animation, secondaryAnimation) =>
                           PlacesDetailScreen(place: placesList[index]),
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) {
+                            // Slide the new page from bottom -> top with an ease curve.
+                            final tween = Tween<Offset>(
+                              begin: const Offset(0, 1),
+                              end: Offset.zero,
+                            ).chain(CurveTween(curve: Curves.easeInOut));
+
+                            return SlideTransition(
+                              position: animation.drive(tween),
+                              child: child,
+                            );
+                          },
                     ),
                   );
                 },
