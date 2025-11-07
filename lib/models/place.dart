@@ -10,6 +10,7 @@ class Place {
     required this.details,
     required this.image,
     required this.mapSnapshot,
+    this.isFavorite = false,
   }) : id = id ?? myUuid.v4();
 
   final String id;
@@ -17,4 +18,5 @@ class Place {
   final String details;
   final File? image;
   final File? mapSnapshot;
+  final bool isFavorite;
 }

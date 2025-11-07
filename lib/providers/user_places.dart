@@ -10,12 +10,24 @@ Future<Database> _getDatabase() async {
   final dbPath = await sql.getDatabasesPath();
   final db = await sql.openDatabase(
     path.join(dbPath, 'places.db'),
+    version: 2,
     onCreate: (db, version) {
       return db.execute(
-        'CREATE TABLE user_places(id TEXT PRIMARY KEY, title TEXT, details TEXT, image TEXT, snapshot TEXT)',
+        'CREATE TABLE user_places(id TEXT PRIMARY KEY, title TEXT, details TEXT, image TEXT, snapshot TEXT, favorite INTEGER DEFAULT 0)',
       );
     },
-    version: 1,
+    onUpgrade: (db, oldVersion, newVersion) async {
+      // Add favorite column when upgrading from older DBs if it doesn't exist
+      if (oldVersion < 2) {
+        try {
+          await db.execute(
+            'ALTER TABLE user_places ADD COLUMN favorite INTEGER DEFAULT 0',
+          );
+        } catch (_) {
+          // ignore if column already exists or cannot be altered on some platforms
+        }
+      }
+    },
   );
   return db;
 }
@@ -35,6 +47,7 @@ class UserPlacesNotifier extends StateNotifier<List<Place>> {
         mapSnapshot: row['snapshot'] != null
             ? File(row['snapshot'] as String)
             : null,
+        isFavorite: (row['favorite'] as int?) == 1,
       );
     }).toList();
 
@@ -69,6 +82,7 @@ class UserPlacesNotifier extends StateNotifier<List<Place>> {
       details: details,
       image: copiedImage,
       mapSnapshot: copiedSnapShot,
+      isFavorite: false,
     );
 
     final db = await _getDatabase();
@@ -80,12 +94,70 @@ class UserPlacesNotifier extends StateNotifier<List<Place>> {
         "details": newPlace.details,
         "image": newPlace.image?.path,
         "snapshot": newPlace.mapSnapshot?.path,
+        "favorite": newPlace.isFavorite ? 1 : 0,
       },
     );
 
     await db.close();
 
     state = [newPlace, ...state];
+  }
+
+  Future<void> deletePlace(String id) async {
+    Place? existing;
+    try {
+      existing = state.firstWhere((p) => p.id == id);
+    } catch (_) {
+      existing = null;
+    }
+
+    try {
+      if (existing != null) {
+        if (existing.image != null && await existing.image!.exists()) {
+          await existing.image!.delete();
+        }
+        if (existing.mapSnapshot != null &&
+            await existing.mapSnapshot!.exists()) {
+          await existing.mapSnapshot!.delete();
+        }
+      }
+    } catch (_) {}
+
+    final db = await _getDatabase();
+    await db.delete(
+      'user_places',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    await db.close();
+
+    state = state.where((p) => p.id != id).toList();
+  }
+
+  Future<void> toggleFavorite(String id, bool isFav) async {
+    final db = await _getDatabase();
+    await db.update(
+      'user_places',
+      {'favorite': isFav ? 1 : 0},
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    await db.close();
+
+    state = state
+        .map(
+          (p) => p.id == id
+              ? Place(
+                  id: p.id,
+                  title: p.title,
+                  details: p.details,
+                  image: p.image,
+                  mapSnapshot: p.mapSnapshot,
+                  isFavorite: isFav,
+                )
+              : p,
+        )
+        .toList();
   }
 }
 

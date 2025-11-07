@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_happy_place/providers/user_places.dart';
+import 'package:flutter_happy_place/screens/favorites_screen.dart';
 import 'package:flutter_happy_place/screens/add_place_screen.dart';
 import 'package:flutter_happy_place/widgets/places_list.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,6 +31,30 @@ class _PlacesScreenState extends ConsumerState<PlacesScreen> {
       appBar: AppBar(
         title: const Text("My Happy Places"),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.star_outline),
+            onPressed: () {
+              Navigator.of(context).push(
+                PageRouteBuilder(
+                  transitionDuration: const Duration(milliseconds: 600),
+                  reverseTransitionDuration: const Duration(milliseconds: 500),
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      const FavoritesScreen(),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
+                        final tween = Tween<Offset>(
+                          begin: const Offset(1.0, 0.0),
+                          end: Offset.zero,
+                        ).chain(CurveTween(curve: Curves.easeOut));
+                        return SlideTransition(
+                          position: animation.drive(tween),
+                          child: child,
+                        );
+                      },
+                ),
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.add_location_alt_outlined),
             onPressed: () {
@@ -71,6 +96,11 @@ class _PlacesScreenState extends ConsumerState<PlacesScreen> {
 
               return PlacesList(
                 placesList: userPlaces,
+                onDelete: (id) =>
+                    ref.read(userPlacesProvider.notifier).deletePlace(id),
+                onToggleFavorite: (id, isFav) => ref
+                    .read(userPlacesProvider.notifier)
+                    .toggleFavorite(id, isFav),
               );
             },
           ),
