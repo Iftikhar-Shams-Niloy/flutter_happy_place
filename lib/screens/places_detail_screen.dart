@@ -16,6 +16,7 @@ class PlacesDetailScreen extends StatelessWidget {
         title: Text(place.title),
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -29,16 +30,62 @@ class PlacesDetailScreen extends StatelessWidget {
                 return Row(
                   children: [
                     place.image != null
-                        ? ImageCard(
-                            height: cardHeight,
-                            width: cardWidth,
-                            borderColor: Theme.of(
-                              context,
-                            ).colorScheme.secondaryContainer,
-                            shadowColor: Theme.of(
-                              context,
-                            ).colorScheme.secondary,
-                            imageProvider: FileImage(place.image!),
+                        ? GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (_) => Dialog(
+                                  backgroundColor: Colors.transparent,
+                                  insetPadding: const EdgeInsets.all(16),
+                                  child: Stack(
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(12),
+                                        child: InteractiveViewer(
+                                          panEnabled: true,
+                                          scaleEnabled: true,
+                                          child: Image(
+                                            image: FileImage(place.image!),
+                                            fit: BoxFit.contain,
+                                          ),
+                                        ),
+                                      ),
+                                      // Close button
+                                      Positioned(
+                                        top: 8,
+                                        right: 8,
+                                        child: GestureDetector(
+                                          onTap: () =>
+                                              Navigator.of(context).pop(),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.black54,
+                                              shape: BoxShape.circle,
+                                            ),
+                                            padding: const EdgeInsets.all(4),
+                                            child: const Icon(
+                                              Icons.close,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                            child: ImageCard(
+                              height: cardHeight,
+                              width: cardWidth,
+                              borderColor: Theme.of(
+                                context,
+                              ).colorScheme.secondaryContainer,
+                              shadowColor: Theme.of(
+                                context,
+                              ).colorScheme.secondary,
+                              imageProvider: FileImage(place.image!),
+                            ),
                           )
                         : PlaceHolderContainer(
                             cardHeight: cardHeight,
@@ -49,16 +96,64 @@ class PlacesDetailScreen extends StatelessWidget {
                     const SizedBox(width: 16),
 
                     place.mapSnapshot != null
-                        ? ImageCard(
-                            height: cardHeight,
-                            width: cardWidth,
-                            borderColor: Theme.of(
-                              context,
-                            ).colorScheme.primaryContainer,
-                            shadowColor: Theme.of(
-                              context,
-                            ).colorScheme.primary,
-                            imageProvider: FileImage(place.mapSnapshot!),
+                        ? GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (_) => Dialog(
+                                  backgroundColor: Colors.transparent,
+                                  insetPadding: const EdgeInsets.all(16),
+                                  child: Stack(
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(12),
+                                        child: InteractiveViewer(
+                                          panEnabled: true,
+                                          scaleEnabled: true,
+                                          child: Image(
+                                            image: FileImage(
+                                              place.mapSnapshot!,
+                                            ),
+                                            fit: BoxFit.contain,
+                                          ),
+                                        ),
+                                      ),
+                                      // Close button
+                                      Positioned(
+                                        top: 8,
+                                        right: 8,
+                                        child: GestureDetector(
+                                          onTap: () =>
+                                              Navigator.of(context).pop(),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.black54,
+                                              shape: BoxShape.circle,
+                                            ),
+                                            padding: const EdgeInsets.all(4),
+                                            child: const Icon(
+                                              Icons.close,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                            child: ImageCard(
+                              height: cardHeight,
+                              width: cardWidth,
+                              borderColor: Theme.of(
+                                context,
+                              ).colorScheme.primaryContainer,
+                              shadowColor: Theme.of(
+                                context,
+                              ).colorScheme.primary,
+                              imageProvider: FileImage(place.mapSnapshot!),
+                            ),
                           )
                         : PlaceHolderContainer(
                             cardHeight: cardHeight,
@@ -75,19 +170,21 @@ class PlacesDetailScreen extends StatelessWidget {
               vertical: 8.0,
               horizontal: 16.0,
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  place.title,
-                  style: TextStyle(fontSize: 24),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  place.details,
-                  style: TextStyle(fontSize: 18),
-                ),
-              ],
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    place.title,
+                    style: TextStyle(fontSize: 24),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    place.details,
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ],
+              ),
             ),
           ),
         ],

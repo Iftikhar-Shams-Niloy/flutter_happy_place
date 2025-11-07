@@ -82,7 +82,7 @@ class _OpenStateMap extends State<OpenStateMap> {
       });
     } catch (e) {
       setState(() {
-        _currentLocation = const LatLng(40.7128, -74.0060); // Fallback to NYC
+        _currentLocation = const LatLng(40.7128, -74.0060);
         _isLoading = false;
       });
       if (mounted) {
@@ -95,15 +95,37 @@ class _OpenStateMap extends State<OpenStateMap> {
 
   Future<void> _captureMapSnapshot() async {
     try {
-      RenderRepaintBoundary boundary =
-          _mapKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
-      ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+      final mapContext = _mapKey.currentContext;
+      if (mapContext == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Map not available to capture')),
+          );
+        }
+        return;
+      }
 
-      Navigator.pop(context, image);
+      final renderObject = mapContext.findRenderObject();
+      if (renderObject == null || renderObject is! RenderRepaintBoundary) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Unable to capture map snapshot')),
+          );
+        }
+        return;
+      }
+
+      final ui.Image image = await renderObject.toImage(pixelRatio: 3.0);
+
+      if (!mounted) return;
+
+      Navigator.of(context).pop(image);
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Error capturing snapshot: $e')));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error capturing snapshot: $e')),
+        );
+      }
     }
   }
 
@@ -270,11 +292,8 @@ class _OpenStateMap extends State<OpenStateMap> {
                   _currentZoom = position.zoom;
                 },
                 onTap: (tapPosition, point) {
-                  // Distinguish single-tap (place marker) from double-tap (zoom in).
-                  // We implement this by deferring the single-tap action briefly and
-                  // cancelling it if a second tap arrives.
+                  //* <--- Distinguish single-tap (place marker) from double-tap (zoom in). --->
                   if (_singleTapTimer?.isActive ?? false) {
-                    // second tap within threshold => treat as double-tap: zoom in
                     _singleTapTimer!.cancel();
                     final newZoom = (_currentZoom + 1).clamp(3.0, 18.0);
                     _myMapController.move(point, newZoom);
@@ -282,7 +301,7 @@ class _OpenStateMap extends State<OpenStateMap> {
                   } else {
                     // start timer to commit single-tap after short delay
                     _singleTapTimer = Timer(
-                      const Duration(milliseconds: 250),
+                      const Duration(milliseconds: 200),
                       () {
                         if (!mounted) return;
                         setState(() {
