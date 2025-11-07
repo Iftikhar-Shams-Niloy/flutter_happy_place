@@ -46,12 +46,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     _pageController.animateToPage(
       index,
       duration: const Duration(milliseconds: 400),
-      curve: Curves.easeInOutCubic,
+      curve: Curves.easeInOut,
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final navbarHeight = MediaQuery.of(context).size.height / 9.5;
     return Scaffold(
       body: PageView(
         controller: _pageController,
@@ -59,6 +60,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         children: _screens,
       ),
       bottomNavigationBar: Container(
+        height: navbarHeight,
         decoration: BoxDecoration(
           color: Theme.of(
             context,
@@ -137,27 +139,43 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                isSelected ? activeIcon : icon,
-                size: isSelected ? 26 : 24,
-                color: isSelected
-                    ? Theme.of(context).colorScheme.primary
-                    : Theme.of(
-                        context,
-                      ).colorScheme.secondary.withValues(alpha: 0.8),
+              // Smoothly animate the icon color and size when selection changes
+              TweenAnimationBuilder<Color?>(
+                tween: ColorTween(
+                  end: isSelected
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(context).colorScheme.secondary,
+                ),
+                duration: const Duration(milliseconds: 250),
+                builder: (context, color, child) {
+                  return TweenAnimationBuilder<double>(
+                    tween: Tween<double>(end: isSelected ? 26.0 : 24.0),
+                    duration: const Duration(milliseconds: 250),
+                    builder: (context, size, child2) {
+                      return Icon(
+                        isSelected ? activeIcon : icon,
+                        size: size,
+                        color: color,
+                      );
+                    },
+                  );
+                },
               ),
-              const SizedBox(height: 4),
-              Text(
-                label,
+
+              const SizedBox(height: 2),
+
+              // Animate the label's color and size when selection changes
+              AnimatedDefaultTextStyle(
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.easeInOut,
                 style: TextStyle(
                   color: isSelected
                       ? Theme.of(context).colorScheme.primary
-                      : Theme.of(
-                          context,
-                        ).colorScheme.secondary.withValues(alpha: 0.8),
-                  fontSize: 16,
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                      : Theme.of(context).colorScheme.secondary.withAlpha(204),
+                  fontSize: isSelected ? 14.0 : 12.0,
+                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.normal,
                 ),
+                child: Text(label),
               ),
             ],
           ),
