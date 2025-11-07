@@ -31,22 +31,80 @@ class PlacesList extends StatelessWidget {
           return Dismissible(
             key: ValueKey(place.id),
             direction: DismissDirection.horizontal,
-            // background for swipe right (startToEnd)
-            secondaryBackground: Container(
-              color: Theme.of(context).colorScheme.error,
-              alignment: Alignment.centerRight,
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: const Icon(Icons.delete, color: Colors.white),
+            //* <-- Delete (Swipe left to right) --->
+            secondaryBackground: Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 8.0,
+                horizontal: 16,
+              ),
+              child: Material(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                color: Theme.of(context).colorScheme.error,
+                clipBehavior: Clip.antiAlias,
+                child: Container(
+                  alignment: Alignment.centerRight,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: const [
+                      Text(
+                        'Delete',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      Icon(Icons.delete, size: 24, color: Colors.white),
+                    ],
+                  ),
+                ),
+              ),
             ),
-            background: Container(
-              color: Theme.of(context).colorScheme.secondary,
-              alignment: Alignment.centerLeft,
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: const Icon(Icons.star, color: Colors.white),
+            //* <-- Favorite (Swipe left to right) --->
+            background: Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 6.0,
+                horizontal: 16,
+              ),
+              child: Material(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                color: Theme.of(context).colorScheme.secondary,
+                clipBehavior: Clip.antiAlias,
+                child: Container(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: const [
+                      Icon(Icons.star, size: 24, color: Colors.white),
+                      SizedBox(width: 8),
+                      Text(
+                        'Super Happy Place',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
             confirmDismiss: (direction) async {
               if (direction == DismissDirection.startToEnd) {
-                // mark/unmark favorite; do not dismiss
                 final newFav = !place.isFavorite;
                 final messenger = ScaffoldMessenger.of(context);
                 try {
@@ -55,8 +113,8 @@ class PlacesList extends StatelessWidget {
                     SnackBar(
                       content: Text(
                         newFav
-                            ? 'Added "${place.title}" to favorites'
-                            : 'Removed "${place.title}" from favorites',
+                            ? 'Added "${place.title}" to favorites 😃'
+                            : 'Removed "${place.title}" from favorites 🥺',
                       ),
                     ),
                   );
@@ -66,7 +124,6 @@ class PlacesList extends StatelessWidget {
                 return false; // don't dismiss the item
               }
 
-              // endToStart => delete confirmation
               return showDialog<bool>(
                 context: context,
                 builder: (ctx) => AlertDialog(
@@ -131,12 +188,10 @@ class PlacesList extends StatelessWidget {
                             PlacesDetailScreen(place: place),
                         transitionsBuilder:
                             (context, animation, secondaryAnimation, child) {
-                              // Slide the new page from bottom -> top with an ease curve.
                               final tween = Tween<Offset>(
                                 begin: const Offset(0, 1),
                                 end: Offset.zero,
                               ).chain(CurveTween(curve: Curves.easeInOut));
-
                               return SlideTransition(
                                 position: animation.drive(tween),
                                 child: child,

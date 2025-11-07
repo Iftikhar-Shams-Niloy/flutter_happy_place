@@ -136,7 +136,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
           child: TextButton.icon(
             onPressed: _isGettingLocation ? null : _getCurrentLocation,
             icon: const Icon(Icons.location_on),
-            label: const Text("Get Current Location & Capture Map"),
+            label: const Text("Pickup Location From Map"),
           ),
         ),
       ],
