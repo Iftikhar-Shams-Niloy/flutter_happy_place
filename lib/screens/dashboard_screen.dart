@@ -118,7 +118,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     required String label,
   }) {
     final isSelected = _currentIndex == index;
-
     return Expanded(
       child: InkWell(
         onTap: () => _onTabTapped(index),
