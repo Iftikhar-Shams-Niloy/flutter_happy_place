@@ -14,16 +14,24 @@ class FavoritesScreen extends ConsumerWidget {
         .toList();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('My Super Happy Places')),
+      appBar: AppBar(
+        title: const Text('My Super Happy Places'),
+        automaticallyImplyLeading: false,
+      ),
       body: Padding(
         padding: const EdgeInsets.only(top: 8.0),
-        child: PlacesList(
-          placesList: places,
-          onDelete: (id) =>
-              ref.read(userPlacesProvider.notifier).deletePlace(id),
-          onToggleFavorite: (id, isFav) =>
-              ref.read(userPlacesProvider.notifier).toggleFavorite(id, isFav),
-        ),
+        child: places.isEmpty
+            ? const Center(
+                child: Text('No favorites yet! Swipe right to add favorites.'),
+              )
+            : PlacesList(
+                placesList: places,
+                onDelete: (id) =>
+                    ref.read(userPlacesProvider.notifier).deletePlace(id),
+                onToggleFavorite: (id, isFav) => ref
+                    .read(userPlacesProvider.notifier)
+                    .toggleFavorite(id, isFav),
+              ),
       ),
     );
   }
