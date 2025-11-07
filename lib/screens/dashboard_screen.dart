@@ -62,18 +62,18 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         decoration: BoxDecoration(
           color: Theme.of(
             context,
-          ).bottomNavigationBarTheme.backgroundColor!.withValues(alpha: 0.9),
+          ).bottomNavigationBarTheme.backgroundColor!.withValues(alpha: 0.8),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 10,
-              offset: const Offset(0, -2),
+              blurRadius: 8,
+              offset: const Offset(0, -4),
             ),
           ],
         ),
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -122,9 +122,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         onTap: () => _onTabTapped(index),
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(32),
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 250),
+          duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
           decoration: BoxDecoration(
@@ -139,12 +139,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             children: [
               Icon(
                 isSelected ? activeIcon : icon,
+                size: isSelected ? 26 : 24,
                 color: isSelected
                     ? Theme.of(context).colorScheme.primary
                     : Theme.of(
                         context,
-                      ).colorScheme.secondary.withValues(alpha: 0.5),
-                size: 26,
+                      ).colorScheme.secondary.withValues(alpha: 0.8),
               ),
               const SizedBox(height: 4),
               Text(
@@ -154,8 +154,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       ? Theme.of(context).colorScheme.primary
                       : Theme.of(
                           context,
-                        ).colorScheme.secondary.withValues(alpha: 0.5),
-                  fontSize: 12,
+                        ).colorScheme.secondary.withValues(alpha: 0.8),
+                  fontSize: 16,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                 ),
               ),

@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 class MyAppColors {
   static const seedGreen = Color.fromARGB(255, 238, 172, 95);
   static const accentPurple = Color.fromARGB(255, 154, 109, 216);
-  static const lightPurple = Color.fromARGB(255, 212, 181, 255);
+  static const darkPurple = Color.fromARGB(255, 57, 29, 96);
 }
 
 class MyAppScheme {
   static final lightScheme = ColorScheme.fromSeed(
     seedColor: MyAppColors.seedGreen,
     brightness: Brightness.light,
-    secondary: MyAppColors.lightPurple,
+    secondary: MyAppColors.darkPurple,
   );
 
   static final darkScheme = ColorScheme.fromSeed(
