@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_happy_place/providers/user_places.dart';
-import 'package:flutter_happy_place/screens/add_place_screen.dart';
+import 'package:flutter_happy_place/models/place.dart';
+import 'package:flutter_happy_place/widgets/sort_button.dart';
 import 'package:flutter_happy_place/widgets/places_list.dart';
 import 'package:flutter_happy_place/widgets/searchbar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,6 +19,8 @@ class _PlacesScreenState extends ConsumerState<PlacesScreen> {
   late Future<void> _placesFuture;
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
+  // Current sorting selection for the places list
+  SortOption _sortOption = SortOption.newestFirst;
 
   @override
   void initState() {
@@ -52,22 +55,14 @@ class _PlacesScreenState extends ConsumerState<PlacesScreen> {
                     onChanged: (v) => setState(() => _searchQuery = v),
                   ),
                 ),
+
                 const SizedBox(width: 4),
-                Card(
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(32),
-                  ),
-                  child: IconButton(
-                    icon: Image(
-                      image: AssetImage("assets/icons/sort.png"),
-                      color: Theme.of(context).colorScheme.secondary,
-                      height: 24,
-                      width: 24,
-                    ),
-                    onPressed: () {
-                    },
-                  ),
+
+                //* <-- Use SortButton widget -->
+                SortButton(
+                  value: _sortOption,
+                  onSelected: (selected) =>
+                      setState(() => _sortOption = selected),
                 ),
               ],
             ),
@@ -87,10 +82,10 @@ class _PlacesScreenState extends ConsumerState<PlacesScreen> {
                 );
               }
 
-              // apply search filter (title or details)
-              final query = _searchQuery;
+              //* <-- apply search filter -->
+              final query = _searchQuery.toLowerCase();
               final filtered = query.isEmpty
-                  ? userPlaces
+                  ? userPlaces.toList()
                   : userPlaces
                         .where(
                           (p) =>
@@ -99,8 +94,29 @@ class _PlacesScreenState extends ConsumerState<PlacesScreen> {
                         )
                         .toList();
 
+              List<Place> placesForDisplay = List<Place>.of(filtered);
+              switch (_sortOption) {
+                case SortOption.newestFirst:
+                  break;
+                case SortOption.oldestFirst:
+                  placesForDisplay = placesForDisplay.reversed.toList();
+                  break;
+                case SortOption.alphabetical:
+                  placesForDisplay.sort(
+                    (a, b) =>
+                        a.title.toLowerCase().compareTo(b.title.toLowerCase()),
+                  );
+                  break;
+                case SortOption.reverseAlphabetical:
+                  placesForDisplay.sort(
+                    (a, b) =>
+                        b.title.toLowerCase().compareTo(a.title.toLowerCase()),
+                  );
+                  break;
+              }
+
               return PlacesList(
-                placesList: filtered,
+                placesList: placesForDisplay,
                 onDelete: (id) =>
                     ref.read(userPlacesProvider.notifier).deletePlace(id),
                 onToggleFavorite: (id, isFav) => ref
