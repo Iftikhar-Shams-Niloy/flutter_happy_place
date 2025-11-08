@@ -62,7 +62,30 @@ class _OpenStateMap extends State<OpenStateMap> {
       }
 
       if (permission == LocationPermission.deniedForever) {
-        throw 'Location permissions are permanently denied, we cannot request permissions.';
+        if (!mounted) return;
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text('Location required'),
+            content: const Text(
+              'Please enable location permission in app settings.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pop(),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Geolocator.openAppSettings();
+                  Navigator.of(ctx).pop();
+                },
+                child: const Text('Open settings'),
+              ),
+            ],
+          ),
+        );
+        return;
       }
 
       final LocationSettings locationSettings = LocationSettings(
@@ -145,7 +168,32 @@ class _OpenStateMap extends State<OpenStateMap> {
       }
 
       if (permission == LocationPermission.deniedForever) {
-        throw 'Location permissions are permanently denied, we cannot request permissions.';
+        if (!mounted) return;
+
+        // show a dialog and optionally open app settings
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text('Location required'),
+            content: const Text(
+              'Please enable location permission in app settings.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pop(),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Geolocator.openAppSettings();
+                  Navigator.of(ctx).pop();
+                },
+                child: const Text('Open settings'),
+              ),
+            ],
+          ),
+        );
+        return;
       }
 
       final LocationSettings locationSettings = LocationSettings(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_happy_place/providers/user_places.dart';
 import 'package:flutter_happy_place/screens/add_place_screen.dart';
 import 'package:flutter_happy_place/widgets/places_list.dart';
+import 'package:flutter_happy_place/widgets/searchbar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class PlacesScreen extends ConsumerStatefulWidget {
@@ -40,80 +41,59 @@ class _PlacesScreenState extends ConsumerState<PlacesScreen> {
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(64.0),
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-            child: Container(
-              height: 48,
-              child: TextField(
-                controller: _searchController,
-                onChanged: (v) =>
-                    setState(() => _searchQuery = v.trim().toLowerCase()),
-                textInputAction: TextInputAction.search,
-                decoration: InputDecoration(
-                  hintText: 'Search happy places!',
-                  isDense: true,
-                  prefixIcon: Icon(
-                    Icons.search,
-                    size: 24,
-                    color: Theme.of(context).colorScheme.secondary,
+            padding: const EdgeInsets.fromLTRB(16, 0, 8, 16),
+            child: Row(
+              children: [
+                Expanded(
+                  child: AppSearchBar(
+                    controller: _searchController,
+                    query: _searchQuery,
+                    hintText: 'Search happy places!',
+                    onChanged: (v) => setState(() => _searchQuery = v),
                   ),
-                  suffixIcon: _searchQuery.isNotEmpty
-                      ? IconButton(
-                          icon: const Icon(Icons.clear),
-                          onPressed: () {
-                            _searchController.clear();
-                            setState(() => _searchQuery = '');
-                          },
-                        )
-                      : null,
-                  contentPadding: const EdgeInsets.symmetric(
-                    vertical: 0,
-                    horizontal: 12,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(999),
-                    borderSide: BorderSide.none,
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(999),
-                    borderSide: BorderSide.none,
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(999),
-                    borderSide: BorderSide.none,
-                  ),
-                  filled: true,
-                  fillColor: Theme.of(context).colorScheme.surfaceContainer,
                 ),
-              ),
+                const SizedBox(width: 4),
+                Card(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(32),
+                  ),
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.add_location_alt_outlined,
+                      size: 28,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        PageRouteBuilder(
+                          transitionDuration: const Duration(milliseconds: 600),
+                          reverseTransitionDuration: const Duration(
+                            milliseconds: 500,
+                          ),
+                          pageBuilder:
+                              (context, animation, secondaryAnimation) =>
+                                  const AddPlaceScreen(),
+                          transitionsBuilder:
+                              (context, animation, secondaryAnimation, child) {
+                                final tween = Tween<Offset>(
+                                  begin: const Offset(1.0, 0.0),
+                                  end: Offset.zero,
+                                ).chain(CurveTween(curve: Curves.easeOut));
+                                return SlideTransition(
+                                  position: animation.drive(tween),
+                                  child: child,
+                                );
+                              },
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add_location_alt_outlined),
-            onPressed: () {
-              Navigator.of(context).push(
-                PageRouteBuilder(
-                  transitionDuration: const Duration(milliseconds: 600),
-                  reverseTransitionDuration: const Duration(milliseconds: 500),
-                  pageBuilder: (context, animation, secondaryAnimation) =>
-                      const AddPlaceScreen(),
-                  transitionsBuilder:
-                      (context, animation, secondaryAnimation, child) {
-                        final tween = Tween<Offset>(
-                          begin: const Offset(1.0, 0.0),
-                          end: Offset.zero,
-                        ).chain(CurveTween(curve: Curves.easeOut));
-                        return SlideTransition(
-                          position: animation.drive(tween),
-                          child: child,
-                        );
-                      },
-                ),
-              );
-            },
-          ),
-        ],
       ),
 
       body: Padding(
