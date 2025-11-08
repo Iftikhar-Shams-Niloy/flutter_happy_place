@@ -52,7 +52,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final navbarHeight = MediaQuery.of(context).size.height / 9.5;
+    final navbarHeight = MediaQuery.of(context).size.height / 10;
     return Scaffold(
       body: PageView(
         controller: _pageController,
