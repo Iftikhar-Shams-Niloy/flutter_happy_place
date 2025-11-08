@@ -59,34 +59,13 @@ class _PlacesScreenState extends ConsumerState<PlacesScreen> {
                     borderRadius: BorderRadius.circular(32),
                   ),
                   child: IconButton(
-                    icon: Icon(
-                      Icons.add_location_alt_outlined,
-                      size: 28,
+                    icon: Image(
+                      image: AssetImage("assets/icons/sort.png"),
                       color: Theme.of(context).colorScheme.secondary,
+                      height: 24,
+                      width: 24,
                     ),
                     onPressed: () {
-                      Navigator.of(context).push(
-                        PageRouteBuilder(
-                          transitionDuration: const Duration(milliseconds: 600),
-                          reverseTransitionDuration: const Duration(
-                            milliseconds: 500,
-                          ),
-                          pageBuilder:
-                              (context, animation, secondaryAnimation) =>
-                                  const AddPlaceScreen(),
-                          transitionsBuilder:
-                              (context, animation, secondaryAnimation, child) {
-                                final tween = Tween<Offset>(
-                                  begin: const Offset(1.0, 0.0),
-                                  end: Offset.zero,
-                                ).chain(CurveTween(curve: Curves.easeOut));
-                                return SlideTransition(
-                                  position: animation.drive(tween),
-                                  child: child,
-                                );
-                              },
-                        ),
-                      );
                     },
                   ),
                 ),
