@@ -14,6 +14,17 @@ class PlacesDetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(place.title),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: Image(
+              image: AssetImage("assets/icons/edit_icon.png"),
+              height: 28,
+              width: 28,
+              color: Theme.of(context).colorScheme.surfaceContainer,
+            ),
+          ),
+        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,8 +66,7 @@ class PlacesDetailScreen extends StatelessWidget {
                                         top: 8,
                                         right: 8,
                                         child: GestureDetector(
-                                          onTap: () =>
-                                              Navigator.of(context).pop(),
+                                          onTap: () => Navigator.of(context).pop(),
                                           child: Container(
                                             decoration: BoxDecoration(
                                               color: Colors.black54,
@@ -123,8 +133,7 @@ class PlacesDetailScreen extends StatelessWidget {
                                         top: 8,
                                         right: 8,
                                         child: GestureDetector(
-                                          onTap: () =>
-                                              Navigator.of(context).pop(),
+                                          onTap: () => Navigator.of(context).pop(),
                                           child: Container(
                                             decoration: BoxDecoration(
                                               color: Colors.black54,
