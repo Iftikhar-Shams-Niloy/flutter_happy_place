@@ -103,6 +103,58 @@ class UserPlacesNotifier extends StateNotifier<List<Place>> {
     state = [newPlace, ...state];
   }
 
+  Future<void> updatePlace(
+    String id,
+    String title,
+    String details,
+    File? image,
+    File? mapSnapshot,
+  ) async {
+    final appDirectory = await syspaths.getApplicationDocumentsDirectory();
+
+    File? copiedImage;
+    File? copiedSnapShot;
+
+    if (image != null) {
+      final imageFileName = path.basename(image.path);
+      copiedImage = await image.copy("${appDirectory.path}/$imageFileName");
+    }
+
+    if (mapSnapshot != null) {
+      final snapShotFileName = path.basename(mapSnapshot.path);
+      copiedSnapShot = await mapSnapshot.copy(
+        "${appDirectory.path}/$snapShotFileName",
+      );
+    }
+
+    final db = await _getDatabase();
+    await db.update(
+      'user_places',
+      {
+        "title": title,
+        "details": details,
+        "image": copiedImage?.path,
+        "snapshot": copiedSnapShot?.path,
+      },
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    await db.close();
+
+    state = state
+        .map((p) => p.id == id
+            ? Place(
+                id: p.id,
+                title: title,
+                details: details,
+                image: copiedImage ?? p.image,
+                mapSnapshot: copiedSnapShot ?? p.mapSnapshot,
+                isFavorite: p.isFavorite,
+              )
+            : p)
+        .toList();
+  }
+
   Future<void> deletePlace(String id) async {
     Place? existing;
     try {

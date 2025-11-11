@@ -4,10 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImageInputWidget extends StatefulWidget {
-  const ImageInputWidget({super.key, required this.onPickedImage});
+  const ImageInputWidget({
+    super.key,
+    required this.onPickedImage,
+    this.initialImage,
+  });
 
   //* onPickedImage function will be passed to the parent (AddPlaceScreen()) after it is executed
   final void Function(File image) onPickedImage;
+  // Optional initial image to show (for edit mode)
+  final File? initialImage;
 
   @override
   State<ImageInputWidget> createState() {
@@ -17,6 +23,14 @@ class ImageInputWidget extends StatefulWidget {
 
 class _ImageInputWidgetState extends State<ImageInputWidget> {
   File? _selectedImage;
+  
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialImage != null) {
+      _selectedImage = widget.initialImage;
+    }
+  }
   void _captureImage() async {
     final imagePicker = ImagePicker();
     final pickedImage = await imagePicker.pickImage(
@@ -46,6 +60,7 @@ class _ImageInputWidgetState extends State<ImageInputWidget> {
       setState(() {
         _selectedImage = File(pickedImage.path);
       });
+      widget.onPickedImage(_selectedImage!);
     }
   }
 

@@ -1,22 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_happy_place/models/place.dart';
 import 'package:flutter_happy_place/widgets/custom_item_card.dart';
+import 'add_place_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/user_places.dart';
 
-class PlacesDetailScreen extends StatelessWidget {
+class PlacesDetailScreen extends ConsumerStatefulWidget {
   const PlacesDetailScreen({super.key, required this.place});
 
   final Place place;
 
   @override
+  ConsumerState<PlacesDetailScreen> createState() => _PlacesDetailScreenState();
+}
+
+class _PlacesDetailScreenState extends ConsumerState<PlacesDetailScreen> {
+  @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+
+    // watch provider so UI updates when the place is edited
+    final places = ref.watch(userPlacesProvider);
+    Place place;
+    try {
+      place = places.firstWhere((p) => p.id == widget.place.id);
+    } catch (_) {
+      // fallback to the original passed place if not found
+      place = widget.place;
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(place.title),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () async {
+              await Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => AddPlaceScreen(editingPlace: place),
+                ),
+              );
+              // after the edit screen returns, provider will have
+              // been updated and ref.watch above will rebuild with new data
+            },
             icon: Image(
               image: AssetImage("assets/icons/edit_icon.png"),
               height: 28,

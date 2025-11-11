@@ -5,9 +5,12 @@ import 'package:flutter_happy_place/widgets/image_input.dart';
 import 'package:flutter_happy_place/widgets/location_input.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/custom_snackbar.dart';
+import '../models/place.dart';
 
 class AddPlaceScreen extends ConsumerStatefulWidget {
-  const AddPlaceScreen({super.key});
+  const AddPlaceScreen({super.key, this.editingPlace});
+
+  final Place? editingPlace;
 
   @override
   ConsumerState<AddPlaceScreen> createState() {
@@ -21,6 +24,8 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
   File? _selectedImage;
   File? _mapSnapshotFile;
 
+  bool get isEditing => widget.editingPlace != null;
+
   void _savePlace() {
     final enteredTitle = _titleController.text;
     final enteredDetails = _detailsController.text;
@@ -33,19 +38,36 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
       );
       return;
     }
-    ref
-        .read(userPlacesProvider.notifier) //* reads from the provider
-        .addPlace(
-          enteredTitle,
-          enteredDetails,
-          _selectedImage!,
-          _mapSnapshotFile!,
-        );
-    CustomSnackbar.show(
-      context,
-      "New happy place added successfully!",
-      isError: false,
-    );
+    if (isEditing) {
+      final id = widget.editingPlace!.id;
+      ref.read(userPlacesProvider.notifier).updatePlace(
+            id,
+            enteredTitle,
+            enteredDetails,
+            _selectedImage ?? widget.editingPlace!.image,
+            _mapSnapshotFile ?? widget.editingPlace!.mapSnapshot,
+          );
+      CustomSnackbar.show(
+        context,
+        "Place updated successfully!",
+        isError: false,
+      );
+    } else {
+      ref
+          .read(userPlacesProvider.notifier) //* reads from the provider
+          .addPlace(
+            enteredTitle,
+            enteredDetails,
+            _selectedImage,
+            _mapSnapshotFile,
+          );
+      CustomSnackbar.show(
+        context,
+        "New happy place added successfully!",
+        isError: false,
+      );
+    }
+
     Navigator.of(context).pop();
   }
 
@@ -53,6 +75,19 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
   void dispose() {
     _titleController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Prefill fields when editing
+    final edit = widget.editingPlace;
+    if (edit != null) {
+      _titleController.text = edit.title;
+      _detailsController.text = edit.details;
+      _selectedImage = edit.image;
+      _mapSnapshotFile = edit.mapSnapshot;
+    }
   }
 
   @override
@@ -86,7 +121,7 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
                 color: Theme.of(context).colorScheme.primary,
               ),
               title: Text(
-                "Which new place made you happy?",
+                isEditing ? 'Edit Place' : 'Which new place made you happy?',
                 style: TextStyle(color: Theme.of(context).colorScheme.primary),
               ),
             ),
@@ -123,14 +158,18 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
                   const SizedBox(height: 16),
 
                   ImageInputWidget(
+                    initialImage: _selectedImage,
                     onPickedImage: (image) {
-                      _selectedImage = image;
+                      setState(() {
+                        _selectedImage = image;
+                      });
                     },
                   ),
 
                   const SizedBox(height: 16),
 
                   LocationInputWidget(
+                    initialMapSnapshot: _mapSnapshotFile,
                     onMapSnapshotPicked: (file) {
                       setState(() {
                         _mapSnapshotFile = file;
@@ -142,8 +181,8 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
 
                   ElevatedButton.icon(
                     onPressed: _savePlace,
-                    label: const Text("Add Place"),
-                    icon: const Icon(Icons.add),
+                    label: Text(isEditing ? 'Save' : 'Add Place'),
+                    icon: Icon(isEditing ? Icons.check : Icons.add),
                   ),
                 ],
               ),

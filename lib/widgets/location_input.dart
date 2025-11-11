@@ -6,10 +6,17 @@ import 'package:latlong2/latlong.dart';
 import 'package:flutter_happy_place/widgets/open_state_map.dart';
 
 class LocationInputWidget extends StatefulWidget {
-  const LocationInputWidget({super.key, this.onMapSnapshotPicked});
+  const LocationInputWidget({
+    super.key,
+    this.onMapSnapshotPicked,
+    this.initialMapSnapshot,
+  });
 
   // Callback when a map snapshot file is available (PNG file)
   final void Function(File? mapSnapshot)? onMapSnapshotPicked;
+  // Optional initial snapshot file to preview (edit mode)
+  final File? initialMapSnapshot;
+  
   @override
   State<LocationInputWidget> createState() {
     return _LocationInputWidgetState();
@@ -18,8 +25,16 @@ class LocationInputWidget extends StatefulWidget {
 
 class _LocationInputWidgetState extends State<LocationInputWidget> {
   LatLng? _pickedLocation;
-  ui.Image? _mapSnapshot;
+  File? _mapSnapshotFile;
   var _isGettingLocation = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialMapSnapshot != null) {
+      _mapSnapshotFile = widget.initialMapSnapshot;
+    }
+  }
 
   void _getCurrentLocation() async {
     Location location = Location();
@@ -82,14 +97,14 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
         await file.writeAsBytes(bytes);
         if (!mounted) return;
         setState(() {
-          _mapSnapshot = capturedImage;
+          _mapSnapshotFile = file;
         });
         // notify parent widget (e.g., AddPlaceScreen) about the saved file
         widget.onMapSnapshotPicked?.call(file);
       } else {
         if (!mounted) return;
         setState(() {
-          _mapSnapshot = capturedImage;
+          _mapSnapshotFile = null;
         });
         widget.onMapSnapshotPicked?.call(null);
       }
@@ -105,11 +120,11 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
 
     if (_isGettingLocation) {
       previewContent = const CircularProgressIndicator();
-    } else if (_mapSnapshot != null) {
+    } else if (_mapSnapshotFile != null) {
       previewContent = ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(8)),
-        child: RawImage(
-          image: _mapSnapshot,
+        child: Image.file(
+          _mapSnapshotFile!,
           fit: BoxFit.cover,
           width: double.infinity,
           height: double.infinity,
