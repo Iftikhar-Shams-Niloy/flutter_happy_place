@@ -18,7 +18,6 @@ class PlacesDetailScreen extends ConsumerStatefulWidget {
 class _PlacesDetailScreenState extends ConsumerState<PlacesDetailScreen> {
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
     // watch provider so UI updates when the place is edited
@@ -59,13 +58,14 @@ class _PlacesDetailScreenState extends ConsumerState<PlacesDetailScreen> {
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Builder(
-              builder: (context) {
-                final double padding = 16.0;
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                // Use LayoutBuilder for more accurate available width
+                final double availableWidth = constraints.maxWidth;
                 final double spacing = 16.0;
-                final double cardWidth =
-                    (screenWidth - padding * 2 - spacing) / 2;
-                final double cardHeight = screenHeight / 3;
+                final double cardWidth = (availableWidth - spacing) / 2;
+                // Use a more flexible height calculation
+                final double cardHeight = screenHeight * 0.3; // 30% of screen height
                 return Row(
                   children: [
                     isValidImageFile(place.image)

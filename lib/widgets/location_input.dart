@@ -151,11 +151,17 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
           child: previewContent,
         ),
         const SizedBox(height: 4),
-        Card(
-          child: TextButton.icon(
-            onPressed: _isGettingLocation ? null : _getCurrentLocation,
-            icon: const Icon(Icons.location_on),
-            label: const Text("Pickup Location From Map"),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: SizedBox(
+            width: double.infinity,
+            child: Card(
+              child: TextButton.icon(
+                onPressed: _isGettingLocation ? null : _getCurrentLocation,
+                icon: const Icon(Icons.location_on),
+                label: const Text("Pickup Location From Map"),
+              ),
+            ),
           ),
         ),
       ],

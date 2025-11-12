@@ -156,8 +156,8 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
           return Padding(
             padding: const EdgeInsets.all(16),
             child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
+              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 200, // Max width per item (adaptive)
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
                 childAspectRatio: 1,

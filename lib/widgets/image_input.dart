@@ -97,25 +97,33 @@ class _ImageInputWidgetState extends State<ImageInputWidget> {
 
         const SizedBox(height: 4),
 
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Card(
-              child: TextButton.icon(
-                onPressed: _captureImage,
-                label: const Text("Take Picture"),
-                icon: const Icon(Icons.camera_rounded),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Card(
+                  child: TextButton.icon(
+                    onPressed: _captureImage,
+                    label: const Text("Take Picture"),
+                    icon: const Icon(Icons.camera_rounded),
+                  ),
+                ),
               ),
-            ),
-            Card(
-              child: TextButton.icon(
-                onPressed: _chooseImage,
-                label: const Text("Choose Picture"),
-                icon: const Icon(Icons.image),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Card(
+                  child: TextButton.icon(
+                    onPressed: _chooseImage,
+                    label: const Text("Choose Picture"),
+                    icon: const Icon(Icons.image),
+                  ),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ],
     );
