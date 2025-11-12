@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 // Sorting options for the places list
-enum SortOption { newestFirst, oldestFirst, alphabetical, reverseAlphabetical }
+enum SortOption { oldestFirst, newestFirst, alphabetical, reverseAlphabetical }
 
 class SortButton extends StatelessWidget {
   const SortButton({
@@ -39,6 +39,7 @@ class SortButton extends StatelessWidget {
               ],
             ),
           ),
+          
           PopupMenuItem(
             value: SortOption.oldestFirst,
             child: Row(
@@ -49,6 +50,7 @@ class SortButton extends StatelessWidget {
               ],
             ),
           ),
+
           PopupMenuItem(
             value: SortOption.alphabetical,
             child: Row(
@@ -59,6 +61,7 @@ class SortButton extends StatelessWidget {
               ],
             ),
           ),
+
           PopupMenuItem(
             value: SortOption.reverseAlphabetical,
             child: Row(

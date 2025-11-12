@@ -20,7 +20,7 @@ class _PlacesScreenState extends ConsumerState<PlacesScreen> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
   // Current sorting selection for the places list
-  SortOption _sortOption = SortOption.newestFirst;
+  SortOption _sortOption = SortOption.oldestFirst;
 
   @override
   void initState() {
@@ -96,9 +96,9 @@ class _PlacesScreenState extends ConsumerState<PlacesScreen> {
 
               List<Place> placesForDisplay = List<Place>.of(filtered);
               switch (_sortOption) {
-                case SortOption.newestFirst:
-                  break;
                 case SortOption.oldestFirst:
+                  break;
+                case SortOption.newestFirst:
                   placesForDisplay = placesForDisplay.reversed.toList();
                   break;
                 case SortOption.alphabetical:
