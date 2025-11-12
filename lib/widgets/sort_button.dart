@@ -8,10 +8,12 @@ class SortButton extends StatelessWidget {
     super.key,
     required this.value,
     required this.onSelected,
+    required this.buttonSize,
   });
 
   final SortOption value;
   final ValueChanged<SortOption> onSelected;
+  final double buttonSize;
 
   @override
   Widget build(BuildContext context) {
@@ -74,12 +76,12 @@ class SortButton extends StatelessWidget {
           ),
         ],
         child: Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding: EdgeInsets.all(buttonSize/2),
           child: Image.asset(
             'assets/icons/sort.png',
             color: Theme.of(context).colorScheme.secondary,
-            width: 24,
-            height: 24,
+            width: buttonSize,
+            height: buttonSize,
             fit: BoxFit.contain,
           ),
         ),

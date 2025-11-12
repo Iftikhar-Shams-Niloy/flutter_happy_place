@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_happy_place/providers/user_places.dart';
+import 'package:flutter_happy_place/widgets/sort_button.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:io';
 
@@ -12,6 +13,7 @@ class GalleryScreen extends ConsumerStatefulWidget {
 
 class _GalleryScreenState extends ConsumerState<GalleryScreen> {
   late Future<void> _placesFuture;
+  SortOption _sortOption = SortOption.oldestFirst;
 
   @override
   void initState() {
@@ -98,14 +100,42 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
   @override
   Widget build(BuildContext context) {
     final places = ref.watch(userPlacesProvider);
-    final imagesWithTitles = places
+    var imagesWithTitles = places
         .where((place) => place.image != null)
         .map((place) => {'image': place.image!, 'title': place.title})
         .toList();
 
+    // Apply sorting
+    switch (_sortOption) {
+      case SortOption.oldestFirst:
+        // Already in order
+        break;
+      case SortOption.newestFirst:
+        imagesWithTitles = imagesWithTitles.reversed.toList();
+        break;
+      case SortOption.alphabetical:
+        imagesWithTitles.sort((a, b) => (a['title'] as String)
+            .toLowerCase()
+            .compareTo((b['title'] as String).toLowerCase()));
+        break;
+      case SortOption.reverseAlphabetical:
+        imagesWithTitles.sort((a, b) => (b['title'] as String)
+            .toLowerCase()
+            .compareTo((a['title'] as String).toLowerCase()));
+        break;
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Gallery'),
+        actions: [
+          SortButton(
+            buttonSize: 16,
+            value: _sortOption,
+            onSelected: (selected) => setState(() => _sortOption = selected),
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
       body: FutureBuilder(
         future: _placesFuture,

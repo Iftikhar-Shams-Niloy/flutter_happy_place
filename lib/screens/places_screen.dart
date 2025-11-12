@@ -60,6 +60,7 @@ class _PlacesScreenState extends ConsumerState<PlacesScreen> {
 
                 //* <-- Use SortButton widget -->
                 SortButton(
+                  buttonSize: 24,
                   value: _sortOption,
                   onSelected: (selected) =>
                       setState(() => _sortOption = selected),
