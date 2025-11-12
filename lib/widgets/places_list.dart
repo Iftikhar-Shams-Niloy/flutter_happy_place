@@ -2,6 +2,7 @@
 import 'package:flutter_happy_place/screens/places_detail_screen.dart';
 
 import '../models/place.dart';
+import '../utils/file_utils.dart';
 
 class PlacesList extends StatelessWidget {
   const PlacesList({
@@ -172,7 +173,15 @@ class PlacesList extends StatelessWidget {
                     backgroundColor: Theme.of(
                       context,
                     ).colorScheme.secondaryContainer,
-                    foregroundImage: FileImage(place.image!),
+                    foregroundImage: isValidImageFile(place.image)
+                        ? FileImage(place.image!)
+                        : null,
+                    child: isValidImageFile(place.image)
+                        ? null
+                        : Icon(
+                            Icons.image_not_supported,
+                            color: Theme.of(context).colorScheme.onSecondaryContainer,
+                          ),
                   ),
                   title: Text(
                     place.title,

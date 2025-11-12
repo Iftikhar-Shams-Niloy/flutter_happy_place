@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Modify this file to customize your launch splash screen -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@android:color/white" />
-
-    <!-- You can insert your own image assets here -->
-    <!-- <item>
+    <!-- Solid background color matching your app theme -->
+    <item android:drawable="@color/launch_background_color" />
+    
+    <!-- Optional: Add your app logo in the center if desired -->
+    <!-- Uncomment the section below to show your logo during native launch -->
+    <!--
+    <item>
         <bitmap
             android:gravity="center"
-            android:src="@mipmap/launch_image" />
-    </item> -->
+            android:src="@mipmap/launcher_icon" />
+    </item>
+    -->
 </layer-list>

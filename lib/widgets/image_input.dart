@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import '../utils/file_utils.dart';
 
 class ImageInputWidget extends StatefulWidget {
   const ImageInputWidget({
@@ -67,13 +68,16 @@ class _ImageInputWidgetState extends State<ImageInputWidget> {
   @override
   Widget build(BuildContext context) {
     Widget content = Text("Nothing to show!");
-    if (_selectedImage != null) {
+    if (isValidImageFile(_selectedImage)) {
       content = ClipRRect(
         borderRadius: BorderRadius.circular(8),
         child: Image.file(
           _selectedImage!,
           fit: BoxFit.cover,
           width: double.infinity,
+          errorBuilder: (context, error, stack) => Center(
+            child: Icon(Icons.broken_image, size: 50),
+          ),
         ),
       );
     }

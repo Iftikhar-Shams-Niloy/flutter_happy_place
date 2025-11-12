@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_happy_place/widgets/open_state_map.dart';
+import '../utils/file_utils.dart';
 
 class LocationInputWidget extends StatefulWidget {
   const LocationInputWidget({
@@ -120,7 +121,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
 
     if (_isGettingLocation) {
       previewContent = const CircularProgressIndicator();
-    } else if (_mapSnapshotFile != null) {
+    } else if (isValidImageFile(_mapSnapshotFile)) {
       previewContent = ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(8)),
         child: Image.file(
@@ -128,6 +129,9 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
           fit: BoxFit.cover,
           width: double.infinity,
           height: double.infinity,
+          errorBuilder: (context, error, stack) => Center(
+            child: Icon(Icons.broken_image, size: 50),
+          ),
         ),
       );
     }

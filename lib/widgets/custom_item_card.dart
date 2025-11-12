@@ -7,14 +7,14 @@ class ImageCard extends StatelessWidget {
     required this.width,
     required this.borderColor,
     required this.shadowColor,
-    required this.imageProvider,
+    this.imageProvider,
   });
 
   final double height;
   final double width;
   final Color borderColor;
   final Color shadowColor;
-  final ImageProvider imageProvider;
+  final ImageProvider? imageProvider;
 
   // fixed values
   static const double _borderRadius = 12;
@@ -39,11 +39,22 @@ class ImageCard extends StatelessWidget {
             offset: const Offset(0, 0),
           ),
         ],
-        image: DecorationImage(
-          image: imageProvider,
-          fit: BoxFit.cover,
-        ),
+        image: imageProvider != null
+            ? DecorationImage(
+                image: imageProvider!,
+                fit: BoxFit.cover,
+              )
+            : null,
       ),
+      child: imageProvider == null
+          ? Center(
+              child: Icon(
+                Icons.image_not_supported,
+                size: 50,
+                color: borderColor.withValues(alpha: 0.5),
+              ),
+            )
+          : null,
     );
   }
 }

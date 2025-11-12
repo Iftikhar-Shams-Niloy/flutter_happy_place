@@ -3,6 +3,7 @@ import 'package:flutter_happy_place/providers/user_places.dart';
 import 'package:flutter_happy_place/widgets/sort_button.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:io';
+import '../utils/file_utils.dart';
 
 class MapGalleryScreen extends ConsumerStatefulWidget {
   const MapGalleryScreen({super.key});
@@ -101,7 +102,7 @@ class _MapGalleryScreenState extends ConsumerState<MapGalleryScreen> {
   Widget build(BuildContext context) {
     final places = ref.watch(userPlacesProvider);
     var mapsWithTitles = places
-        .where((place) => place.mapSnapshot != null)
+        .where((place) => isValidImageFile(place.mapSnapshot))
         .map((place) => {'map': place.mapSnapshot!, 'title': place.title})
         .toList();
 

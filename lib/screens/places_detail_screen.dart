@@ -4,6 +4,7 @@ import 'package:flutter_happy_place/widgets/custom_item_card.dart';
 import 'add_place_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/user_places.dart';
+import '../utils/file_utils.dart';
 
 class PlacesDetailScreen extends ConsumerStatefulWidget {
   const PlacesDetailScreen({super.key, required this.place});
@@ -67,7 +68,7 @@ class _PlacesDetailScreenState extends ConsumerState<PlacesDetailScreen> {
                 final double cardHeight = screenHeight / 3;
                 return Row(
                   children: [
-                    place.image != null
+                    isValidImageFile(place.image)
                         ? GestureDetector(
                             onTap: () {
                               showDialog(
@@ -85,6 +86,8 @@ class _PlacesDetailScreenState extends ConsumerState<PlacesDetailScreen> {
                                           child: Image(
                                             image: FileImage(place.image!),
                                             fit: BoxFit.contain,
+                                            errorBuilder: (context, error, stack) =>
+                                                const Icon(Icons.error, size: 100),
                                           ),
                                         ),
                                       ),
@@ -121,18 +124,20 @@ class _PlacesDetailScreenState extends ConsumerState<PlacesDetailScreen> {
                               shadowColor: Theme.of(
                                 context,
                               ).colorScheme.secondary,
-                              imageProvider: FileImage(place.image!),
+                              imageProvider: isValidImageFile(place.image)
+                                  ? FileImage(place.image!)
+                                  : null,
                             ),
                           )
                         : PlaceHolderContainer(
                             cardHeight: cardHeight,
                             cardWidth: cardWidth,
-                            cardText: 'No map snapshot',
+                            cardText: 'No image',
                           ),
 
                     const SizedBox(width: 16),
 
-                    place.mapSnapshot != null
+                    isValidImageFile(place.mapSnapshot)
                         ? GestureDetector(
                             onTap: () {
                               showDialog(
@@ -152,6 +157,8 @@ class _PlacesDetailScreenState extends ConsumerState<PlacesDetailScreen> {
                                               place.mapSnapshot!,
                                             ),
                                             fit: BoxFit.contain,
+                                            errorBuilder: (context, error, stack) =>
+                                                const Icon(Icons.error, size: 100),
                                           ),
                                         ),
                                       ),
@@ -188,7 +195,9 @@ class _PlacesDetailScreenState extends ConsumerState<PlacesDetailScreen> {
                               shadowColor: Theme.of(
                                 context,
                               ).colorScheme.primary,
-                              imageProvider: FileImage(place.mapSnapshot!),
+                              imageProvider: isValidImageFile(place.mapSnapshot)
+                                  ? FileImage(place.mapSnapshot!)
+                                  : null,
                             ),
                           )
                         : PlaceHolderContainer(

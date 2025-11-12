@@ -3,6 +3,7 @@ import 'package:flutter_happy_place/providers/user_places.dart';
 import 'package:flutter_happy_place/widgets/sort_button.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:io';
+import '../utils/file_utils.dart';
 
 class GalleryScreen extends ConsumerStatefulWidget {
   const GalleryScreen({super.key});
@@ -101,7 +102,7 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
   Widget build(BuildContext context) {
     final places = ref.watch(userPlacesProvider);
     var imagesWithTitles = places
-        .where((place) => place.image != null)
+        .where((place) => isValidImageFile(place.image))
         .map((place) => {'image': place.image!, 'title': place.title})
         .toList();
 
