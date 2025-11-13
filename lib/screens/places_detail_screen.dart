@@ -20,7 +20,6 @@ class _PlacesDetailScreenState extends ConsumerState<PlacesDetailScreen> {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
 
-    // watch provider so UI updates when the place is edited
     final places = ref.watch(userPlacesProvider);
     Place place;
     try {
@@ -59,12 +58,10 @@ class _PlacesDetailScreenState extends ConsumerState<PlacesDetailScreen> {
             padding: const EdgeInsets.all(16.0),
             child: LayoutBuilder(
               builder: (context, constraints) {
-                // Use LayoutBuilder for more accurate available width
                 final double availableWidth = constraints.maxWidth;
                 final double spacing = 16.0;
                 final double cardWidth = (availableWidth - spacing) / 2;
-                // Use a more flexible height calculation
-                final double cardHeight = screenHeight * 0.3; // 30% of screen height
+                final double cardHeight = screenHeight * 0.3; 
                 return Row(
                   children: [
                     isValidImageFile(place.image)
