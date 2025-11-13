@@ -17,14 +17,12 @@ Future<Database> _getDatabase() async {
       );
     },
     onUpgrade: (db, oldVersion, newVersion) async {
-      // Add favorite column when upgrading from older DBs if it doesn't exist
       if (oldVersion < 2) {
         try {
           await db.execute(
             'ALTER TABLE user_places ADD COLUMN favorite INTEGER DEFAULT 0',
           );
         } catch (_) {
-          // ignore if column already exists or cannot be altered on some platforms
         }
       }
     },
@@ -111,31 +109,47 @@ class UserPlacesNotifier extends StateNotifier<List<Place>> {
     File? mapSnapshot,
   ) async {
     final appDirectory = await syspaths.getApplicationDocumentsDirectory();
+    
+    final existingPlace = state.firstWhere((p) => p.id == id);
 
     File? copiedImage;
     File? copiedSnapShot;
 
-    if (image != null) {
+    if (image != null && image.path != existingPlace.image?.path) {
       final imageFileName = path.basename(image.path);
       copiedImage = await image.copy("${appDirectory.path}/$imageFileName");
+    } else if (image != null) {
+      copiedImage = existingPlace.image;
     }
 
-    if (mapSnapshot != null) {
+    if (mapSnapshot != null && mapSnapshot.path != existingPlace.mapSnapshot?.path) {
       final snapShotFileName = path.basename(mapSnapshot.path);
       copiedSnapShot = await mapSnapshot.copy(
         "${appDirectory.path}/$snapShotFileName",
       );
+    } else if (mapSnapshot != null) {
+      copiedSnapShot = existingPlace.mapSnapshot;
     }
 
     final db = await _getDatabase();
+    
+    final Map<String, dynamic> updateData = {
+      "title": title,
+      "details": details,
+    };
+    
+    //*<--- Update database fields only if the file was actually changed --->
+    if (image != null && image.path != existingPlace.image?.path) {
+      updateData["image"] = copiedImage?.path;
+    }
+    
+    if (mapSnapshot != null && mapSnapshot.path != existingPlace.mapSnapshot?.path) {
+      updateData["snapshot"] = copiedSnapShot?.path;
+    }
+    
     await db.update(
       'user_places',
-      {
-        "title": title,
-        "details": details,
-        "image": copiedImage?.path,
-        "snapshot": copiedSnapShot?.path,
-      },
+      updateData,
       where: 'id = ?',
       whereArgs: [id],
     );

@@ -41,8 +41,7 @@ class _PlacesDetailScreenState extends ConsumerState<PlacesDetailScreen> {
                   builder: (_) => AddPlaceScreen(editingPlace: place),
                 ),
               );
-              // after the edit screen returns, provider will have
-              // been updated and ref.watch above will rebuild with new data
+              
             },
             icon: Image(
               image: AssetImage("assets/icons/edit_icon.png"),
