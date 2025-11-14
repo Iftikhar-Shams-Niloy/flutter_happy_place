@@ -40,7 +40,9 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
     }
     if (isEditing) {
       final id = widget.editingPlace!.id;
-      ref.read(userPlacesProvider.notifier).updatePlace(
+      ref
+          .read(userPlacesProvider.notifier)
+          .updatePlace(
             id,
             enteredTitle,
             enteredDetails,

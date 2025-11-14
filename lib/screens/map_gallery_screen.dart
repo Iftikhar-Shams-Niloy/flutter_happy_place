@@ -113,14 +113,18 @@ class _MapGalleryScreenState extends ConsumerState<MapGalleryScreen> {
         mapsWithTitles = mapsWithTitles.reversed.toList();
         break;
       case SortOption.alphabetical:
-        mapsWithTitles.sort((a, b) => (a['title'] as String)
-            .toLowerCase()
-            .compareTo((b['title'] as String).toLowerCase()));
+        mapsWithTitles.sort(
+          (a, b) => (a['title'] as String).toLowerCase().compareTo(
+            (b['title'] as String).toLowerCase(),
+          ),
+        );
         break;
       case SortOption.reverseAlphabetical:
-        mapsWithTitles.sort((a, b) => (b['title'] as String)
-            .toLowerCase()
-            .compareTo((a['title'] as String).toLowerCase()));
+        mapsWithTitles.sort(
+          (a, b) => (b['title'] as String).toLowerCase().compareTo(
+            (a['title'] as String).toLowerCase(),
+          ),
+        );
         break;
     }
 
@@ -135,7 +139,6 @@ class _MapGalleryScreenState extends ConsumerState<MapGalleryScreen> {
           ),
           const SizedBox(width: 8),
         ],
-        
       ),
       body: FutureBuilder(
         future: _placesFuture,
@@ -156,7 +159,7 @@ class _MapGalleryScreenState extends ConsumerState<MapGalleryScreen> {
             padding: const EdgeInsets.all(16),
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 200, 
+                maxCrossAxisExtent: 200,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
                 childAspectRatio: 1,

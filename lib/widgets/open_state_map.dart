@@ -381,7 +381,7 @@ class _OpenStateMap extends State<OpenStateMap> {
               ],
             ),
           ),
-          
+
           //* <--- Search bar --->
           Positioned(
             top: 0,
@@ -470,7 +470,7 @@ class _OpenStateMap extends State<OpenStateMap> {
               ),
             ),
           ),
-          
+
           //* <--- Capture button --->
           Positioned(
             bottom: 30,

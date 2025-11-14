@@ -37,7 +37,7 @@ class _SearchOverlayState extends State<SearchOverlay>
       curve: Curves.easeInOut,
     );
     _animController.forward();
-    
+
     // Auto-focus the search field
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _focusNode.requestFocus();
@@ -77,23 +77,26 @@ class _SearchOverlayState extends State<SearchOverlay>
 
   void _navigateToPlace(Place place) {
     _focusNode.unfocus();
-    Navigator.of(context).push(
-      PageRouteBuilder(
-        transitionDuration: const Duration(milliseconds: 500),
-        pageBuilder: (context, animation, secondaryAnimation) =>
-            PlacesDetailScreen(place: place),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          final tween = Tween<Offset>(
-            begin: const Offset(0, 1),
-            end: Offset.zero,
-          ).chain(CurveTween(curve: Curves.easeInOut));
-          return SlideTransition(
-            position: animation.drive(tween),
-            child: child,
-          );
-        },
-      ),
-    ).then((_) => _dismissOverlay());
+    Navigator.of(context)
+        .push(
+          PageRouteBuilder(
+            transitionDuration: const Duration(milliseconds: 500),
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                PlacesDetailScreen(place: place),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+                  final tween = Tween<Offset>(
+                    begin: const Offset(0, 1),
+                    end: Offset.zero,
+                  ).chain(CurveTween(curve: Curves.easeInOut));
+                  return SlideTransition(
+                    position: animation.drive(tween),
+                    child: child,
+                  );
+                },
+          ),
+        )
+        .then((_) => _dismissOverlay());
   }
 
   @override
@@ -110,12 +113,15 @@ class _SearchOverlayState extends State<SearchOverlay>
             child: Column(
               children: [
                 //* <--- Search bar at top (vertically centered)
-                SizedBox(height: screenHeight*0.055,),
+                SizedBox(
+                  height: screenHeight * 0.055,
+                ),
                 Center(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: GestureDetector(
-                      onTap: () {}, //* <--- Prevent dismissal when tapping search bar --->
+                      onTap:
+                          () {}, //* <--- Prevent dismissal when tapping search bar --->
                       child: Material(
                         elevation: 12,
                         borderRadius: BorderRadius.circular(999),
@@ -177,11 +183,13 @@ class _SearchOverlayState extends State<SearchOverlay>
                     ),
                   ),
                 ), // <--- Center widget closes here
-
                 // Search results (top 3)
                 if (_searchResults.isNotEmpty)
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 16,
+                    ),
                     child: GestureDetector(
                       onTap: () {}, // Prevent dismissal when tapping results
                       child: Material(
@@ -196,9 +204,7 @@ class _SearchOverlayState extends State<SearchOverlay>
                             height: 8,
                             indent: 16,
                             endIndent: 16,
-                            color: Theme.of(context)
-                                .colorScheme
-                                .outlineVariant
+                            color: Theme.of(context).colorScheme.outlineVariant
                                 .withValues(alpha: 0.75),
                           ),
                           itemBuilder: (context, index) {
@@ -206,9 +212,9 @@ class _SearchOverlayState extends State<SearchOverlay>
                             return ListTile(
                               leading: CircleAvatar(
                                 radius: 24,
-                                backgroundColor: Theme.of(context)
-                                    .colorScheme
-                                    .secondaryContainer,
+                                backgroundColor: Theme.of(
+                                  context,
+                                ).colorScheme.secondaryContainer,
                                 foregroundImage: isValidImageFile(place.image)
                                     ? FileImage(place.image!)
                                     : null,
@@ -217,20 +223,18 @@ class _SearchOverlayState extends State<SearchOverlay>
                                     : Icon(
                                         Icons.image_not_supported,
                                         size: 20,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onSecondaryContainer,
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onSecondaryContainer,
                                       ),
                               ),
                               title: Text(
                                 place.title,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium!
+                                style: Theme.of(context).textTheme.titleMedium!
                                     .copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurface,
                                     ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -239,21 +243,19 @@ class _SearchOverlayState extends State<SearchOverlay>
                                 place.details,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall!
+                                style: Theme.of(context).textTheme.bodySmall!
                                     .copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurfaceVariant,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurfaceVariant,
                                     ),
                               ),
                               trailing: Icon(
                                 Icons.arrow_forward_ios,
                                 size: 16,
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onSurfaceVariant,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
                               ),
                               onTap: () => _navigateToPlace(place),
                             );
@@ -270,8 +272,8 @@ class _SearchOverlayState extends State<SearchOverlay>
                     child: Text(
                       'No places found',
                       style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                            color: Colors.white70,
-                          ),
+                        color: Colors.white70,
+                      ),
                     ),
                   ),
               ],

@@ -41,7 +41,7 @@ class SortButton extends StatelessWidget {
               ],
             ),
           ),
-          
+
           PopupMenuItem(
             value: SortOption.oldestFirst,
             child: Row(
@@ -76,7 +76,7 @@ class SortButton extends StatelessWidget {
           ),
         ],
         child: Padding(
-          padding: EdgeInsets.all(buttonSize/2),
+          padding: EdgeInsets.all(buttonSize / 2),
           child: Image.asset(
             'assets/icons/sort.png',
             color: Theme.of(context).colorScheme.secondary,

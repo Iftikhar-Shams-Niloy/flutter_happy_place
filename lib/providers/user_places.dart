@@ -22,8 +22,7 @@ Future<Database> _getDatabase() async {
           await db.execute(
             'ALTER TABLE user_places ADD COLUMN favorite INTEGER DEFAULT 0',
           );
-        } catch (_) {
-        }
+        } catch (_) {}
       }
     },
   );
@@ -109,7 +108,7 @@ class UserPlacesNotifier extends StateNotifier<List<Place>> {
     File? mapSnapshot,
   ) async {
     final appDirectory = await syspaths.getApplicationDocumentsDirectory();
-    
+
     final existingPlace = state.firstWhere((p) => p.id == id);
 
     File? copiedImage;
@@ -122,7 +121,8 @@ class UserPlacesNotifier extends StateNotifier<List<Place>> {
       copiedImage = existingPlace.image;
     }
 
-    if (mapSnapshot != null && mapSnapshot.path != existingPlace.mapSnapshot?.path) {
+    if (mapSnapshot != null &&
+        mapSnapshot.path != existingPlace.mapSnapshot?.path) {
       final snapShotFileName = path.basename(mapSnapshot.path);
       copiedSnapShot = await mapSnapshot.copy(
         "${appDirectory.path}/$snapShotFileName",
@@ -132,21 +132,22 @@ class UserPlacesNotifier extends StateNotifier<List<Place>> {
     }
 
     final db = await _getDatabase();
-    
+
     final Map<String, dynamic> updateData = {
       "title": title,
       "details": details,
     };
-    
+
     //*<--- Update database fields only if the file was actually changed --->
     if (image != null && image.path != existingPlace.image?.path) {
       updateData["image"] = copiedImage?.path;
     }
-    
-    if (mapSnapshot != null && mapSnapshot.path != existingPlace.mapSnapshot?.path) {
+
+    if (mapSnapshot != null &&
+        mapSnapshot.path != existingPlace.mapSnapshot?.path) {
       updateData["snapshot"] = copiedSnapShot?.path;
     }
-    
+
     await db.update(
       'user_places',
       updateData,
@@ -156,16 +157,18 @@ class UserPlacesNotifier extends StateNotifier<List<Place>> {
     await db.close();
 
     state = state
-        .map((p) => p.id == id
-            ? Place(
-                id: p.id,
-                title: title,
-                details: details,
-                image: copiedImage ?? p.image,
-                mapSnapshot: copiedSnapShot ?? p.mapSnapshot,
-                isFavorite: p.isFavorite,
-              )
-            : p)
+        .map(
+          (p) => p.id == id
+              ? Place(
+                  id: p.id,
+                  title: title,
+                  details: details,
+                  image: copiedImage ?? p.image,
+                  mapSnapshot: copiedSnapShot ?? p.mapSnapshot,
+                  isFavorite: p.isFavorite,
+                )
+              : p,
+        )
         .toList();
   }
 

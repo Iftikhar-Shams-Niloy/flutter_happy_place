@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_happy_place/screens/places_detail_screen.dart';
 
 import '../models/place.dart';
@@ -128,7 +128,7 @@ class PlacesList extends StatelessWidget {
                 } catch (e) {
                   messenger.showSnackBar(errorSnack);
                 }
-                return false; 
+                return false;
               }
 
               return showDialog<bool>(
@@ -193,7 +193,9 @@ class PlacesList extends StatelessWidget {
                         ? null
                         : Icon(
                             Icons.image_not_supported,
-                            color: Theme.of(context).colorScheme.onSecondaryContainer,
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSecondaryContainer,
                           ),
                   ),
                   title: Text(

@@ -5,17 +5,22 @@ class SplashScreen extends StatefulWidget {
   final Widget? next;
   final Duration duration;
 
-  const SplashScreen({super.key, this.next, this.duration = const Duration(milliseconds: 2750)});
+  const SplashScreen({
+    super.key,
+    this.next,
+    this.duration = const Duration(milliseconds: 2750),
+  });
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen>
+    with TickerProviderStateMixin {
   late final AnimationController _controller;
   late final AnimationController _logoController;
   late final AnimationController _fadeOutController;
-  
+
   late final Animation<double> _scale;
   late final Animation<double> _fade;
   late final Animation<double> _logoPosition;
@@ -25,17 +30,32 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     super.initState();
 
     //* <--- fade-in and scale animation --->
-    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 250));
-    _scale = Tween<double>(begin: 0.5, end: 1.0).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
-    _fade = Tween<double>(begin: 0.5, end: 1.0).animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 250),
+    );
+    _scale = Tween<double>(
+      begin: 0.5,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
+    _fade = Tween<double>(
+      begin: 0.5,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
 
     //* <--- Logo drop and bounce animation --->
-    _logoController = AnimationController(vsync: this, duration: const Duration(milliseconds: 1300));
+    _logoController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1300),
+    );
     _logoPosition = Tween<double>(begin: -300.0, end: 0.0).animate(
-      CurvedAnimation(parent: _logoController, curve: Curves.bounceOut)
+      CurvedAnimation(parent: _logoController, curve: Curves.bounceOut),
     );
 
-    _fadeOutController = AnimationController(vsync: this, duration: const Duration(milliseconds: 250));
+    _fadeOutController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 250),
+    );
 
     _controller.forward();
     _logoController.forward();
@@ -45,7 +65,9 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
       await _fadeOutController.forward();
       if (!mounted) return;
       final next = widget.next ?? const DashboardScreen();
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => next));
+      Navigator.of(
+        context,
+      ).pushReplacement(MaterialPageRoute(builder: (_) => next));
     });
   }
 
@@ -80,7 +102,8 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                 child: AnimatedBuilder(
                   animation: _controller,
                   builder: (_, __) {
-                    final contentOpacity = _fade.value * (1.0 - _fadeOutController.value);
+                    final contentOpacity =
+                        _fade.value * (1.0 - _fadeOutController.value);
                     return Opacity(
                       opacity: contentOpacity,
                       child: Transform.scale(

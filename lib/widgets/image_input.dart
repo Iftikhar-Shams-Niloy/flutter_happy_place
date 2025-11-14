@@ -24,7 +24,7 @@ class ImageInputWidget extends StatefulWidget {
 
 class _ImageInputWidgetState extends State<ImageInputWidget> {
   File? _selectedImage;
-  
+
   @override
   void initState() {
     super.initState();
@@ -32,6 +32,7 @@ class _ImageInputWidgetState extends State<ImageInputWidget> {
       _selectedImage = widget.initialImage;
     }
   }
+
   void _captureImage() async {
     final imagePicker = ImagePicker();
     final pickedImage = await imagePicker.pickImage(

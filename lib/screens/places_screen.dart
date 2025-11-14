@@ -83,9 +83,12 @@ class _PlacesScreenState extends ConsumerState<PlacesScreen> {
                           const SizedBox(width: 12),
                           Text(
                             'Search happy places!',
-                            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                              color: Theme.of(context).colorScheme.onSurfaceVariant,
-                            ),
+                            style: Theme.of(context).textTheme.bodyLarge!
+                                .copyWith(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
+                                ),
                           ),
                         ],
                       ),
@@ -110,48 +113,46 @@ class _PlacesScreenState extends ConsumerState<PlacesScreen> {
 
       body: Padding(
         padding: const EdgeInsets.only(top: 8.0),
-        child: SafeArea(
-          child: FutureBuilder(
-            future: _placesFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-
-              //* <-- apply sorting -->
-              List<Place> placesForDisplay = List<Place>.of(userPlaces);
-              switch (_sortOption) {
-                case SortOption.oldestFirst:
-                  break;
-                case SortOption.newestFirst:
-                  placesForDisplay = placesForDisplay.reversed.toList();
-                  break;
-                case SortOption.alphabetical:
-                  placesForDisplay.sort(
-                    (a, b) =>
-                        a.title.toLowerCase().compareTo(b.title.toLowerCase()),
-                  );
-                  break;
-                case SortOption.reverseAlphabetical:
-                  placesForDisplay.sort(
-                    (a, b) =>
-                        b.title.toLowerCase().compareTo(a.title.toLowerCase()),
-                  );
-                  break;
-              }
-
-              return PlacesList(
-                placesList: placesForDisplay,
-                onDelete: (id) =>
-                    ref.read(userPlacesProvider.notifier).deletePlace(id),
-                onToggleFavorite: (id, isFav) => ref
-                    .read(userPlacesProvider.notifier)
-                    .toggleFavorite(id, isFav),
+        child: FutureBuilder(
+          future: _placesFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
               );
-            },
-          ),
+            }
+        
+            //* <-- apply sorting -->
+            List<Place> placesForDisplay = List<Place>.of(userPlaces);
+            switch (_sortOption) {
+              case SortOption.oldestFirst:
+                break;
+              case SortOption.newestFirst:
+                placesForDisplay = placesForDisplay.reversed.toList();
+                break;
+              case SortOption.alphabetical:
+                placesForDisplay.sort(
+                  (a, b) =>
+                      a.title.toLowerCase().compareTo(b.title.toLowerCase()),
+                );
+                break;
+              case SortOption.reverseAlphabetical:
+                placesForDisplay.sort(
+                  (a, b) =>
+                      b.title.toLowerCase().compareTo(a.title.toLowerCase()),
+                );
+                break;
+            }
+        
+            return PlacesList(
+              placesList: placesForDisplay,
+              onDelete: (id) =>
+                  ref.read(userPlacesProvider.notifier).deletePlace(id),
+              onToggleFavorite: (id, isFav) => ref
+                  .read(userPlacesProvider.notifier)
+                  .toggleFavorite(id, isFav),
+            );
+          },
         ),
       ),
     );

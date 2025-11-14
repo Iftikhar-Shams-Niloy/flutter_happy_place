@@ -42,7 +42,7 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
                 ),
               ),
             ),
-            
+
             //* <--- Close button --->
             Positioned(
               top: 8,
@@ -62,7 +62,7 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
                 ),
               ),
             ),
-            
+
             //* <--- Title --->
             Positioned(
               bottom: 0,
@@ -116,14 +116,18 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
         imagesWithTitles = imagesWithTitles.reversed.toList();
         break;
       case SortOption.alphabetical:
-        imagesWithTitles.sort((a, b) => (a['title'] as String)
-            .toLowerCase()
-            .compareTo((b['title'] as String).toLowerCase()));
+        imagesWithTitles.sort(
+          (a, b) => (a['title'] as String).toLowerCase().compareTo(
+            (b['title'] as String).toLowerCase(),
+          ),
+        );
         break;
       case SortOption.reverseAlphabetical:
-        imagesWithTitles.sort((a, b) => (b['title'] as String)
-            .toLowerCase()
-            .compareTo((a['title'] as String).toLowerCase()));
+        imagesWithTitles.sort(
+          (a, b) => (b['title'] as String).toLowerCase().compareTo(
+            (a['title'] as String).toLowerCase(),
+          ),
+        );
         break;
     }
 
@@ -158,7 +162,7 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
             padding: const EdgeInsets.all(16),
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 200, 
+                maxCrossAxisExtent: 200,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
                 childAspectRatio: 1,

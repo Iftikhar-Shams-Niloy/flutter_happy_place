@@ -28,12 +28,14 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
         places = places.reversed.toList();
         break;
       case SortOption.alphabetical:
-        places.sort((a, b) =>
-            a.title.toLowerCase().compareTo(b.title.toLowerCase()));
+        places.sort(
+          (a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()),
+        );
         break;
       case SortOption.reverseAlphabetical:
-        places.sort((a, b) =>
-            b.title.toLowerCase().compareTo(a.title.toLowerCase()));
+        places.sort(
+          (a, b) => b.title.toLowerCase().compareTo(a.title.toLowerCase()),
+        );
         break;
     }
 

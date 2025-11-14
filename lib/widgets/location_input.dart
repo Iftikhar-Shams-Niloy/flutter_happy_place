@@ -15,7 +15,7 @@ class LocationInputWidget extends StatefulWidget {
 
   final void Function(File? mapSnapshot)? onMapSnapshotPicked;
   final File? initialMapSnapshot;
-  
+
   @override
   State<LocationInputWidget> createState() {
     return _LocationInputWidgetState();

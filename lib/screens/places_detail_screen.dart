@@ -39,7 +39,6 @@ class _PlacesDetailScreenState extends ConsumerState<PlacesDetailScreen> {
                   builder: (_) => AddPlaceScreen(editingPlace: place),
                 ),
               );
-              
             },
             icon: Image(
               image: AssetImage("assets/icons/edit_icon.png"),
@@ -60,7 +59,7 @@ class _PlacesDetailScreenState extends ConsumerState<PlacesDetailScreen> {
                 final double availableWidth = constraints.maxWidth;
                 final double spacing = 16.0;
                 final double cardWidth = (availableWidth - spacing) / 2;
-                final double cardHeight = screenHeight * 0.3; 
+                final double cardHeight = screenHeight * 0.3;
                 return Row(
                   children: [
                     //* <--- Place Image Section --->
@@ -83,18 +82,23 @@ class _PlacesDetailScreenState extends ConsumerState<PlacesDetailScreen> {
                                           child: Image(
                                             image: FileImage(place.image!),
                                             fit: BoxFit.contain,
-                                            errorBuilder: (context, error, stack) =>
-                                                const Icon(Icons.error, size: 100),
+                                            errorBuilder:
+                                                (context, error, stack) =>
+                                                    const Icon(
+                                                      Icons.error,
+                                                      size: 100,
+                                                    ),
                                           ),
                                         ),
                                       ),
-                                      
+
                                       //* <--- Close button --->
                                       Positioned(
                                         top: 8,
                                         right: 8,
                                         child: GestureDetector(
-                                          onTap: () => Navigator.of(context).pop(),
+                                          onTap: () =>
+                                              Navigator.of(context).pop(),
                                           child: Container(
                                             decoration: BoxDecoration(
                                               color: Colors.black54,
@@ -134,7 +138,7 @@ class _PlacesDetailScreenState extends ConsumerState<PlacesDetailScreen> {
                           ),
 
                     const SizedBox(width: 16),
-                    
+
                     //* <--- Map Snapshot Section --->
                     isValidImageFile(place.mapSnapshot)
                         ? GestureDetector(
@@ -157,18 +161,23 @@ class _PlacesDetailScreenState extends ConsumerState<PlacesDetailScreen> {
                                               place.mapSnapshot!,
                                             ),
                                             fit: BoxFit.contain,
-                                            errorBuilder: (context, error, stack) =>
-                                                const Icon(Icons.error, size: 100),
+                                            errorBuilder:
+                                                (context, error, stack) =>
+                                                    const Icon(
+                                                      Icons.error,
+                                                      size: 100,
+                                                    ),
                                           ),
                                         ),
                                       ),
-                                      
+
                                       //* <--- Close button --->
                                       Positioned(
                                         top: 8,
                                         right: 8,
                                         child: GestureDetector(
-                                          onTap: () => Navigator.of(context).pop(),
+                                          onTap: () =>
+                                              Navigator.of(context).pop(),
                                           child: Container(
                                             decoration: BoxDecoration(
                                               color: Colors.black54,
