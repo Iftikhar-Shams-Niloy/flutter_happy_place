@@ -30,6 +30,7 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
         insetPadding: const EdgeInsets.all(16),
         child: Stack(
           children: [
+            //* <--- Image --->
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
               child: InteractiveViewer(
@@ -41,7 +42,8 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
                 ),
               ),
             ),
-            // Close button
+            
+            //* <--- Close button --->
             Positioned(
               top: 8,
               right: 8,
@@ -60,7 +62,8 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
                 ),
               ),
             ),
-            // Title at bottom
+            
+            //* <--- Title --->
             Positioned(
               bottom: 0,
               left: 0,
@@ -106,10 +109,8 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
         .map((place) => {'image': place.image!, 'title': place.title})
         .toList();
 
-    // Apply sorting
     switch (_sortOption) {
       case SortOption.oldestFirst:
-        // Already in order
         break;
       case SortOption.newestFirst:
         imagesWithTitles = imagesWithTitles.reversed.toList();
@@ -157,7 +158,7 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
             padding: const EdgeInsets.all(16),
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 200, // Max width per item (adaptive)
+                maxCrossAxisExtent: 200, 
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
                 childAspectRatio: 1,

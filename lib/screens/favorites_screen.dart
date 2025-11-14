@@ -21,10 +21,8 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
         .where((p) => p.isFavorite)
         .toList();
 
-    // Apply sorting
     switch (_sortOption) {
       case SortOption.oldestFirst:
-        // Already in order
         break;
       case SortOption.newestFirst:
         places = places.reversed.toList();

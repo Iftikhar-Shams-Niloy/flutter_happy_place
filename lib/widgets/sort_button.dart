@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-// Sorting options for the places list
+//*<--- Sorting options for the places list --->
 enum SortOption { oldestFirst, newestFirst, alphabetical, reverseAlphabetical }
 
 class SortButton extends StatelessWidget {

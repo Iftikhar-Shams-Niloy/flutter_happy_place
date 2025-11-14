@@ -106,10 +106,8 @@ class _MapGalleryScreenState extends ConsumerState<MapGalleryScreen> {
         .map((place) => {'map': place.mapSnapshot!, 'title': place.title})
         .toList();
 
-    // Apply sorting
     switch (_sortOption) {
       case SortOption.oldestFirst:
-        // Already in order
         break;
       case SortOption.newestFirst:
         mapsWithTitles = mapsWithTitles.reversed.toList();
@@ -158,7 +156,7 @@ class _MapGalleryScreenState extends ConsumerState<MapGalleryScreen> {
             padding: const EdgeInsets.all(16),
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 200, // Max width per item (adaptive)
+                maxCrossAxisExtent: 200, 
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
                 childAspectRatio: 1,

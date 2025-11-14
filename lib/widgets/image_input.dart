@@ -11,9 +11,9 @@ class ImageInputWidget extends StatefulWidget {
     this.initialImage,
   });
 
-  //* onPickedImage function will be passed to the parent (AddPlaceScreen()) after it is executed
+  //* <--- onPickedImage function will be passed to the parent (AddPlaceScreen()) after it is executed --->
   final void Function(File image) onPickedImage;
-  // Optional initial image to show (for edit mode)
+  //* <--- Optional initial image to show (for edit mode) --->
   final File? initialImage;
 
   @override

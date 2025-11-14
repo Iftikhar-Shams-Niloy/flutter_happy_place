@@ -25,7 +25,6 @@ class _PlacesDetailScreenState extends ConsumerState<PlacesDetailScreen> {
     try {
       place = places.firstWhere((p) => p.id == widget.place.id);
     } catch (_) {
-      // fallback to the original passed place if not found
       place = widget.place;
     }
 
@@ -64,6 +63,7 @@ class _PlacesDetailScreenState extends ConsumerState<PlacesDetailScreen> {
                 final double cardHeight = screenHeight * 0.3; 
                 return Row(
                   children: [
+                    //* <--- Place Image Section --->
                     isValidImageFile(place.image)
                         ? GestureDetector(
                             onTap: () {
@@ -74,6 +74,7 @@ class _PlacesDetailScreenState extends ConsumerState<PlacesDetailScreen> {
                                   insetPadding: const EdgeInsets.all(16),
                                   child: Stack(
                                     children: [
+                                      //* <--- Image --->
                                       ClipRRect(
                                         borderRadius: BorderRadius.circular(12),
                                         child: InteractiveViewer(
@@ -87,7 +88,8 @@ class _PlacesDetailScreenState extends ConsumerState<PlacesDetailScreen> {
                                           ),
                                         ),
                                       ),
-                                      // Close button
+                                      
+                                      //* <--- Close button --->
                                       Positioned(
                                         top: 8,
                                         right: 8,
@@ -132,7 +134,8 @@ class _PlacesDetailScreenState extends ConsumerState<PlacesDetailScreen> {
                           ),
 
                     const SizedBox(width: 16),
-
+                    
+                    //* <--- Map Snapshot Section --->
                     isValidImageFile(place.mapSnapshot)
                         ? GestureDetector(
                             onTap: () {
@@ -143,6 +146,7 @@ class _PlacesDetailScreenState extends ConsumerState<PlacesDetailScreen> {
                                   insetPadding: const EdgeInsets.all(16),
                                   child: Stack(
                                     children: [
+                                      //* <--- Snapshot Image --->
                                       ClipRRect(
                                         borderRadius: BorderRadius.circular(12),
                                         child: InteractiveViewer(
@@ -158,7 +162,8 @@ class _PlacesDetailScreenState extends ConsumerState<PlacesDetailScreen> {
                                           ),
                                         ),
                                       ),
-                                      // Close button
+                                      
+                                      //* <--- Close button --->
                                       Positioned(
                                         top: 8,
                                         right: 8,

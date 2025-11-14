@@ -13,9 +13,7 @@ class LocationInputWidget extends StatefulWidget {
     this.initialMapSnapshot,
   });
 
-  // Callback when a map snapshot file is available (PNG file)
   final void Function(File? mapSnapshot)? onMapSnapshotPicked;
-  // Optional initial snapshot file to preview (edit mode)
   final File? initialMapSnapshot;
   
   @override
@@ -76,7 +74,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
       _pickedLocation = LatLng(locationData.latitude!, locationData.longitude!);
     });
 
-    //* Navigate to map and get snapshot
+    //* <--- Navigate to map and get snapshot --->
     if (!mounted) return;
     final capturedImage = await Navigator.of(context).push<ui.Image>(
       MaterialPageRoute(
@@ -85,7 +83,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
     );
 
     if (capturedImage != null) {
-      // convert ui.Image to PNG bytes and save to a temp file
+      //* <--- convert ui.Image to PNG bytes and save to a temp file --->
       final byteData = await capturedImage.toByteData(
         format: ui.ImageByteFormat.png,
       );
@@ -100,7 +98,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
         setState(() {
           _mapSnapshotFile = file;
         });
-        // notify parent widget (e.g., AddPlaceScreen) about the saved file
+        //* <--- notify parent widget about the saved file --->
         widget.onMapSnapshotPicked?.call(file);
       } else {
         if (!mounted) return;

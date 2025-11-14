@@ -108,8 +108,6 @@ class PlacesList extends StatelessWidget {
             confirmDismiss: (direction) async {
               if (direction == DismissDirection.startToEnd) {
                 final newFav = !place.isFavorite;
-                // Prepare messenger and snackbars synchronously to avoid using
-                // BuildContext across async gaps (lint: use_build_context_synchronously).
                 final messenger = ScaffoldMessenger.of(context);
                 final successSnack = CustomSnackbar.build(
                   context,
@@ -130,7 +128,7 @@ class PlacesList extends StatelessWidget {
                 } catch (e) {
                   messenger.showSnackBar(errorSnack);
                 }
-                return false; // don't dismiss the item
+                return false; 
               }
 
               return showDialog<bool>(

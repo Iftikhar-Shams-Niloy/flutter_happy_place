@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:ui' as ui;
 import 'package:flutter_map/flutter_map.dart';
-// Note: removed flutter_map_location_marker import because we no longer show
-// the default location marker on entry. Keep the package dependency only if
-// used elsewhere in the app.
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
@@ -37,7 +34,7 @@ class _OpenStateMap extends State<OpenStateMap> {
   @override
   void initState() {
     super.initState();
-    // Use passed location if available, otherwise fetch current location
+    //* <--- Use passed location if available, otherwise fetch current location --->
     if (widget.initialLocation != null) {
       _currentLocation = widget.initialLocation;
       _isLoading = false;
@@ -170,7 +167,7 @@ class _OpenStateMap extends State<OpenStateMap> {
       if (permission == LocationPermission.deniedForever) {
         if (!mounted) return;
 
-        // show a dialog and optionally open app settings
+        //* <--- show a dialog and optionally open app settings --->
         showDialog(
           context: context,
           builder: (ctx) => AlertDialog(
@@ -336,7 +333,7 @@ class _OpenStateMap extends State<OpenStateMap> {
                 minZoom: 2.0,
                 maxZoom: 20.0,
                 onPositionChanged: (position, _) {
-                  // keep track of current zoom so we can increment on double-tap
+                  //* <--- keep track of current zoom so we can increment on double-tap --->
                   _currentZoom = position.zoom;
                 },
                 onTap: (tapPosition, point) {
@@ -347,7 +344,7 @@ class _OpenStateMap extends State<OpenStateMap> {
                     _myMapController.move(point, newZoom);
                     _currentZoom = newZoom;
                   } else {
-                    // start timer to commit single-tap after short delay
+                    //* <--- start timer to commit single-tap after short delay --->
                     _singleTapTimer = Timer(
                       const Duration(milliseconds: 200),
                       () {
@@ -384,7 +381,8 @@ class _OpenStateMap extends State<OpenStateMap> {
               ],
             ),
           ),
-          // Search bar below AppBar
+          
+          //* <--- Search bar --->
           Positioned(
             top: 0,
             left: 0,
@@ -472,7 +470,8 @@ class _OpenStateMap extends State<OpenStateMap> {
               ),
             ),
           ),
-          // Capture button at the bottom
+          
+          //* <--- Capture button --->
           Positioned(
             bottom: 30,
             left: 0,

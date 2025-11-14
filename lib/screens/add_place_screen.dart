@@ -54,7 +54,7 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
       );
     } else {
       ref
-          .read(userPlacesProvider.notifier) //* reads from the provider
+          .read(userPlacesProvider.notifier) //*<--reads from the provider-->
           .addPlace(
             enteredTitle,
             enteredDetails,
@@ -80,7 +80,7 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
   @override
   void initState() {
     super.initState();
-    // Prefill fields when editing
+    //* <--- Prefill fields when editing --->
     final edit = widget.editingPlace;
     if (edit != null) {
       _titleController.text = edit.title;
