@@ -3,7 +3,7 @@ import 'package:flutter_happy_place/providers/user_places.dart';
 import 'package:flutter_happy_place/models/place.dart';
 import 'package:flutter_happy_place/widgets/sort_button.dart';
 import 'package:flutter_happy_place/widgets/places_list.dart';
-import 'package:flutter_happy_place/widgets/searchbar.dart';
+import 'package:flutter_happy_place/widgets/search_overlay.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class PlacesScreen extends ConsumerStatefulWidget {
@@ -17,10 +17,8 @@ class PlacesScreen extends ConsumerStatefulWidget {
 
 class _PlacesScreenState extends ConsumerState<PlacesScreen> {
   late Future<void> _placesFuture;
-  final TextEditingController _searchController = TextEditingController();
-  String _searchQuery = '';
-  // Current sorting selection for the places list
   SortOption _sortOption = SortOption.oldestFirst;
+  bool _isSearching = false;
 
   @override
   void initState() {
@@ -30,8 +28,26 @@ class _PlacesScreenState extends ConsumerState<PlacesScreen> {
 
   @override
   void dispose() {
-    _searchController.dispose();
     super.dispose();
+  }
+
+  void _showSearchOverlay() {
+    setState(() => _isSearching = true);
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        opaque: false,
+        barrierDismissible: false,
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return SearchOverlay(
+            allPlaces: ref.read(userPlacesProvider),
+            onDismiss: () {
+              Navigator.of(context).pop();
+              setState(() => _isSearching = false);
+            },
+          );
+        },
+      ),
+    );
   }
 
   @override
@@ -48,11 +64,32 @@ class _PlacesScreenState extends ConsumerState<PlacesScreen> {
             child: Row(
               children: [
                 Expanded(
-                  child: AppSearchBar(
-                    controller: _searchController,
-                    query: _searchQuery,
-                    hintText: 'Search happy places!',
-                    onChanged: (v) => setState(() => _searchQuery = v),
+                  child: GestureDetector(
+                    onTap: _showSearchOverlay,
+                    child: Container(
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.surfaceContainer,
+                        borderRadius: BorderRadius.circular(999),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.search,
+                            size: 24,
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                          const SizedBox(width: 12),
+                          Text(
+                            'Search happy places!',
+                            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
 
@@ -83,19 +120,8 @@ class _PlacesScreenState extends ConsumerState<PlacesScreen> {
                 );
               }
 
-              //* <-- apply search filter -->
-              final query = _searchQuery.toLowerCase();
-              final filtered = query.isEmpty
-                  ? userPlaces.toList()
-                  : userPlaces
-                        .where(
-                          (p) =>
-                              p.title.toLowerCase().contains(query) ||
-                              p.details.toLowerCase().contains(query),
-                        )
-                        .toList();
-
-              List<Place> placesForDisplay = List<Place>.of(filtered);
+              //* <-- apply sorting -->
+              List<Place> placesForDisplay = List<Place>.of(userPlaces);
               switch (_sortOption) {
                 case SortOption.oldestFirst:
                   break;
