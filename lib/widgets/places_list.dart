@@ -174,6 +174,7 @@ class PlacesList extends StatelessWidget {
               }
             },
             child: Card(
+              color: Theme.of(context).colorScheme.surfaceContainer,
               elevation: 4,
               shadowColor: cardShadowColor,
               child: Padding(
