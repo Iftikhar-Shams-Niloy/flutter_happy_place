@@ -3,6 +3,7 @@ import 'package:flutter_happy_place/screens/places_detail_screen.dart';
 
 import '../models/place.dart';
 import '../utils/file_utils.dart';
+import '../widgets/custom_snackbar.dart';
 
 class PlacesList extends StatelessWidget {
   const PlacesList({
@@ -107,20 +108,27 @@ class PlacesList extends StatelessWidget {
             confirmDismiss: (direction) async {
               if (direction == DismissDirection.startToEnd) {
                 final newFav = !place.isFavorite;
+                // Prepare messenger and snackbars synchronously to avoid using
+                // BuildContext across async gaps (lint: use_build_context_synchronously).
                 final messenger = ScaffoldMessenger.of(context);
+                final successSnack = CustomSnackbar.build(
+                  context,
+                  newFav
+                      ? 'Added "${place.title}" to favorites 😃'
+                      : 'Removed "${place.title}" from favorites 🥺',
+                  isError: false,
+                );
+                final errorSnack = CustomSnackbar.build(
+                  context,
+                  'Failed to update favorite',
+                  isError: true,
+                );
+
                 try {
                   await onToggleFavorite(place.id, newFav);
-                  messenger.showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        newFav
-                            ? 'Added "${place.title}" to favorites 😃'
-                            : 'Removed "${place.title}" from favorites 🥺',
-                      ),
-                    ),
-                  );
+                  messenger.showSnackBar(successSnack);
                 } catch (e) {
-                  messenger.showSnackBar(SnackBar(content: Text('Failed: $e')));
+                  messenger.showSnackBar(errorSnack);
                 }
                 return false; // don't dismiss the item
               }
@@ -148,15 +156,22 @@ class PlacesList extends StatelessWidget {
             onDismissed: (direction) async {
               if (direction == DismissDirection.endToStart) {
                 final messenger = ScaffoldMessenger.of(context);
+                final deletedSnack = CustomSnackbar.build(
+                  context,
+                  'Deleted "${place.title}"',
+                  isError: false,
+                );
+                final deleteErrorSnack = CustomSnackbar.build(
+                  context,
+                  'Failed to delete',
+                  isError: true,
+                );
+
                 try {
                   await onDelete(place.id);
-                  messenger.showSnackBar(
-                    SnackBar(content: Text('Deleted "${place.title}"')),
-                  );
+                  messenger.showSnackBar(deletedSnack);
                 } catch (e) {
-                  messenger.showSnackBar(
-                    SnackBar(content: Text('Failed to delete: $e')),
-                  );
+                  messenger.showSnackBar(deleteErrorSnack);
                 }
               }
             },
