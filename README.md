@@ -1,3 +1,6 @@
+<p align="center">
+  <img src="assets/images/app_logo.png" alt="App Logo" style="height: 128px;">
+</p>
 <h1 align="center">Flutter Happy Place</h1>
 
 <p>
